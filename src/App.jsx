@@ -404,7 +404,7 @@ export default function App() {
               <h2 style={{ lineHeight: 1.4, fontSize: '1.5rem' }}>{currentPuzzle.question}</h2>
             </div>
 
-            <div className="flex-col gap-3">
+            <div className="flex-col gap-6">
               {shuffledOptions.map((opt, i) => (
                 <button 
                   key={i}

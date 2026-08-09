@@ -281,7 +281,7 @@ export default function App() {
       {flashScreen === 'orange' && <div className="screen-flash-orange"></div>}
       {flashScreen === 'streak' && <div className="streak-glow"></div>}
 
-      <div style={{ flex: 1, padding: '1.5rem', paddingBottom: '100px' }}>
+      <div style={{ flex: 1, padding: '1.5rem', display: 'flex', flexDirection: 'column', height: '100%', overflow: 'hidden' }}>
         
         {/* HOME SCREEN */}
         {nav === 'HOME' && playState === 'IDLE' && (

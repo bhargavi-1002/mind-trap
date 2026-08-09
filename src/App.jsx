@@ -68,22 +68,34 @@ export default function App() {
   
   const [currentPuzzle, setCurrentPuzzle] = useState(null);
   const [shuffledOptions, setShuffledOptions] = useState([]);
-  const [playedPuzzles, setPlayedPuzzles] = useState([]);
   
+  // Persistent stats
+  const [playedPuzzles, setPlayedPuzzles] = useState(() => JSON.parse(localStorage.getItem('mt_played')) || []);
+  const [bestStreak, setBestStreak] = useState(() => parseInt(localStorage.getItem('mt_best_streak')) || 0);
+  const [trapRateData, setTrapRateData] = useState(() => JSON.parse(localStorage.getItem('mt_trap_data')) || { seen: 0, fallen: 0 });
+  
+  // Current game session
   const [score, setScore] = useState(0);
   const [displayScore, setDisplayScore] = useState(0);
   const [lives, setLives] = useState(3);
   const [streak, setStreak] = useState(0);
+  const [questionsAnswered, setQuestionsAnswered] = useState(0);
   
   const [timeLeft, setTimeLeft] = useState(0);
   const timerRef = useRef(null);
   const scoreIntervalRef = useRef(null);
   
-  const [mascotState, setMascotState] = useState('thinking'); // thinking, happy, shocked, anxious, cool
+  const [mascotState, setMascotState] = useState('thinking'); 
   const [interactionState, setInteractionState] = useState(null);
   const [selectedOption, setSelectedOption] = useState(null);
   
   const [flashScreen, setFlashScreen] = useState(null); 
+
+  useEffect(() => {
+    localStorage.setItem('mt_played', JSON.stringify(playedPuzzles));
+    localStorage.setItem('mt_best_streak', bestStreak.toString());
+    localStorage.setItem('mt_trap_data', JSON.stringify(trapRateData));
+  }, [playedPuzzles, bestStreak, trapRateData]);
 
   useEffect(() => {
     if (displayScore < score) {
@@ -102,7 +114,6 @@ export default function App() {
     return () => clearInterval(scoreIntervalRef.current);
   }, [score, displayScore]);
 
-  // Mascot Anxious State check
   useEffect(() => {
     if (playState === 'PLAYING' && timeLeft > 0 && timeLeft < 300 && mascotState !== 'anxious') {
       setMascotState('anxious');
@@ -128,13 +139,13 @@ export default function App() {
     setScore(0);
     setDisplayScore(0);
     setStreak(0);
+    setQuestionsAnswered(0);
     setLives(mode === 'MARATHON' ? 3 : 1);
-    setPlayedPuzzles([]);
     nextPuzzle();
   };
 
   const nextPuzzle = () => {
-    if (gameMode === 'QUICK' && playedPuzzles.length >= 10) {
+    if (gameMode === 'QUICK' && questionsAnswered >= 10) {
       endGame();
       return;
     }
@@ -145,10 +156,12 @@ export default function App() {
     setPlayState('PLAYING');
     setFlashScreen(null);
     
-    const available = PUZZLES.filter(p => !playedPuzzles.includes(p.id));
+    let available = PUZZLES.filter(p => !playedPuzzles.includes(p.id));
+    
+    // If all puzzles played, reset the list!
     if (available.length === 0) {
-      endGame();
-      return;
+      setPlayedPuzzles([]);
+      available = [...PUZZLES];
     }
     
     const puzzle = available[Math.floor(Math.random() * available.length)];
@@ -182,6 +195,10 @@ export default function App() {
     setStreak(0);
     triggerFlash('orange');
     
+    setTrapRateData(prev => ({ seen: prev.seen + 1, fallen: prev.fallen + 1 }));
+    setPlayedPuzzles(prev => [...prev, currentPuzzle.id]);
+    setQuestionsAnswered(prev => prev + 1);
+    
     if (gameMode === 'MARATHON') setLives(l => l - 1);
     setPlayState('FEEDBACK');
   };
@@ -191,15 +208,20 @@ export default function App() {
     if (timerRef.current) clearInterval(timerRef.current);
     
     setSelectedOption(index);
-    setPlayedPuzzles([...playedPuzzles, currentPuzzle.id]);
+    setPlayedPuzzles(prev => [...prev, currentPuzzle.id]);
+    setQuestionsAnswered(prev => prev + 1);
     
     if (opt.isCorrect) {
       playSound('correct');
       setInteractionState('correct');
       setMascotState('happy');
       
+      setTrapRateData(prev => ({ seen: prev.seen + 1, fallen: prev.fallen }));
+      
       const newStreak = streak + 1;
       setStreak(newStreak);
+      if (newStreak > bestStreak) setBestStreak(newStreak);
+      
       if (newStreak === 5 || newStreak === 10) {
         playSound('milestone');
         triggerFlash('streak');
@@ -215,6 +237,8 @@ export default function App() {
       setMascotState('shocked');
       setStreak(0);
       triggerFlash('orange');
+      
+      setTrapRateData(prev => ({ seen: prev.seen + 1, fallen: prev.fallen + 1 }));
       
       if (gameMode === 'MARATHON') setLives(l => l - 1);
     }
@@ -272,7 +296,20 @@ export default function App() {
               </div>
             </div>
 
-            <h3 style={{ marginTop: '20px', textTransform: 'uppercase', letterSpacing: '1px' }}>Select Mode</h3>
+            <div style={{ display: 'flex', gap: '10px', marginTop: '10px' }}>
+              <div className="glass-panel" style={{ flex: 1, padding: '15px', textAlign: 'center' }}>
+                <h2 style={{ color: 'var(--secondary)', fontSize: '1.5rem' }}>🔥 {bestStreak}</h2>
+                <p style={{ fontSize: '0.7rem', textTransform: 'uppercase' }}>Best Streak</p>
+              </div>
+              <div className="glass-panel" style={{ flex: 1, padding: '15px', textAlign: 'center' }}>
+                <h2 style={{ color: 'var(--primary)', fontSize: '1.5rem' }}>
+                  {trapRateData.seen === 0 ? '0' : Math.round((trapRateData.fallen / trapRateData.seen) * 100)}%
+                </h2>
+                <p style={{ fontSize: '0.7rem', textTransform: 'uppercase' }}>Trap Rate</p>
+              </div>
+            </div>
+
+            <h3 style={{ marginTop: '10px', textTransform: 'uppercase', letterSpacing: '1px' }}>Select Mode</h3>
             
             <div className="glass-panel mode-card" onClick={() => startGame('QUICK')}>
               <div className="mode-icon">⚡</div>
@@ -305,12 +342,26 @@ export default function App() {
                   <div style={{ width: '22px', height: '22px', background: '#111318', borderRadius: '50%', position: 'absolute', right: '2px', top: '2px' }}></div>
                 </div>
               </div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
                 <h3>Haptic Feedback</h3>
                 <div style={{ width: '50px', height: '26px', background: 'var(--secondary)', borderRadius: '15px', position: 'relative' }}>
                   <div style={{ width: '22px', height: '22px', background: '#111318', borderRadius: '50%', position: 'absolute', right: '2px', top: '2px' }}></div>
                 </div>
               </div>
+              
+              <button 
+                className="btn-answer" 
+                style={{ padding: '1rem', marginTop: '1rem' }}
+                onClick={() => {
+                  if(window.confirm('Erase all stats?')) {
+                    setPlayedPuzzles([]);
+                    setBestStreak(0);
+                    setTrapRateData({seen:0, fallen:0});
+                  }
+                }}
+              >
+                Reset Progress
+              </button>
             </div>
           </div>
         )}
@@ -334,7 +385,7 @@ export default function App() {
                   ))}
                 </div>
               ) : (
-                <p style={{ color: 'var(--text-muted)', fontWeight: 800 }}>{playedPuzzles.length} / 10</p>
+                <p style={{ color: 'var(--text-muted)', fontWeight: 800 }}>{questionsAnswered + 1} / 10</p>
               )}
               {streak > 2 && <span className="streak-text">🔥 {streak} STREAK</span>}
             </div>
@@ -418,7 +469,7 @@ export default function App() {
                 </div>
                 <div>
                   <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Questions</p>
-                  <h3>{playedPuzzles.length}</h3>
+                  <h3>{questionsAnswered}</h3>
                 </div>
               </div>
             </div>

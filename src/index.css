@@ -1,13 +1,12 @@
 @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@600;800;900&display=swap');
 
 :root {
-  --bg-dark: #111318;
-  --bg-surface: rgba(30, 32, 40, 0.7);
-  --primary: #ff6b4c; /* Coral-Orange (Danger/Action/Trap) */
-  --primary-glow: rgba(255, 107, 76, 0.5);
-  --secondary: #3ec2e0; /* Electric Cyan (Success) */
-  --secondary-glow: rgba(62, 194, 224, 0.5);
-  --glow-magenta: rgba(168, 85, 247, 0.3); /* Purple glow */
+  --bg-dark: #0f172a;
+  --bg-surface: rgba(15, 23, 42, 0.6);
+  --primary: #ef4444; /* Neon Red (Danger/Action/Trap) */
+  --primary-glow: rgba(239, 68, 68, 0.6);
+  --secondary: #10b981; /* Neon Green (Success) */
+  --secondary-glow: rgba(16, 185, 129, 0.6);
   
   --text-main: #ffffff;
   --text-muted: #9ca3af;
@@ -28,9 +27,22 @@ body {
   overflow-x: hidden;
   display: flex;
   justify-content: center;
-  /* Soft ambient magenta glow */
-  background-image: radial-gradient(circle at 50% 30%, var(--glow-magenta), transparent 60%);
-  background-attachment: fixed;
+  position: relative;
+}
+
+/* Constantly shifting, moving background */
+body::before {
+  content: '';
+  position: fixed;
+  top: -50%; left: -50%;
+  width: 200%; height: 200%;
+  background: 
+    radial-gradient(circle at 50% 50%, rgba(99, 102, 241, 0.2), transparent 40%),
+    radial-gradient(circle at 80% 20%, rgba(236, 72, 153, 0.2), transparent 30%),
+    radial-gradient(circle at 20% 80%, rgba(16, 185, 129, 0.15), transparent 40%);
+  animation: bgShift 20s ease-in-out infinite alternate, colorCycle 15s linear infinite;
+  z-index: -1;
+  pointer-events: none;
 }
 
 #root {
@@ -41,17 +53,30 @@ body {
   display: flex;
   flex-direction: column;
   padding-bottom: 90px;
+  z-index: 1;
 }
 
 /* Glassmorphism / Cards */
 .glass-panel {
   background: var(--bg-surface);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 24px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
   position: relative;
+  overflow: hidden;
+}
+/* Shimmer effect on glass panels */
+.glass-panel::after {
+  content: '';
+  position: absolute;
+  top: -50%; left: -50%;
+  width: 200%; height: 200%;
+  background: linear-gradient(to bottom right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.03) 50%, rgba(255,255,255,0) 100%);
+  transform: rotate(30deg);
+  animation: shimmer 6s infinite linear;
+  pointer-events: none;
 }
 
 /* Typography */
@@ -78,7 +103,7 @@ button {
 .btn-primary {
   background: var(--primary);
   color: white;
-  box-shadow: 0 6px 0 rgba(0,0,0,0.3), 0 10px 20px var(--primary-glow);
+  box-shadow: 0 6px 0 rgba(0,0,0,0.4), 0 10px 20px var(--primary-glow);
 }
 .btn-primary:active { transform: translateY(6px); box-shadow: 0 0 0 rgba(0,0,0,0), 0 5px 10px var(--primary-glow); }
 
@@ -89,32 +114,35 @@ button {
   font-size: 1.2rem;
   padding: 1.5rem;
   width: 100%;
+  position: relative;
+  overflow: hidden;
 }
 .btn-answer:active { transform: scale(0.95); background: rgba(255, 255, 255, 0.1); }
 
 .btn-answer.correct {
   background: var(--secondary);
   border-color: var(--secondary);
-  box-shadow: 0 0 25px var(--secondary-glow);
-  color: #111318;
+  box-shadow: 0 0 30px var(--secondary-glow);
+  color: #000;
   animation: bounceCorrect 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 .btn-answer.wrong {
   background: var(--primary);
   border-color: var(--primary);
-  box-shadow: 0 0 25px var(--primary-glow);
+  box-shadow: 0 0 30px var(--primary-glow);
   color: white;
   animation: crackWrong 0.4s ease;
 }
 
 /* Cards & Modes */
 .hero-card {
-  background: linear-gradient(135deg, rgba(62, 194, 224, 0.15), rgba(255, 107, 76, 0.15));
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(239, 68, 68, 0.15));
   border-radius: 28px;
   padding: 2rem;
   position: relative;
-  border: 1px solid rgba(255,255,255,0.05);
-  box-shadow: 0 15px 40px var(--glow-magenta);
+  border: 1px solid rgba(255,255,255,0.08);
+  box-shadow: 0 15px 40px rgba(0,0,0,0.5);
+  animation: colorCycle 10s linear infinite; /* Hero card shifts colors too */
 }
 
 .mode-card {
@@ -126,7 +154,7 @@ button {
   cursor: pointer;
   transition: transform 0.2s, background 0.2s;
 }
-.mode-card:hover { transform: translateX(5px); background: rgba(255,255,255,0.08); }
+.mode-card:hover { transform: translateX(5px); background: rgba(255,255,255,0.1); }
 .mode-icon {
   width: 50px; height: 50px;
   background: rgba(255,255,255,0.05);
@@ -164,7 +192,7 @@ button {
     0 15px 30px rgba(0,0,0,0.4);
   position: relative;
   transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-  animation: floatMascot 3s ease-in-out infinite;
+  animation: floatMascot 3s ease-in-out infinite, colorCycle 20s linear infinite; /* Mascot subtly changes hue in idle */
   display: flex; justify-content: center; align-items: center;
 }
 .mascot-eyes {
@@ -183,13 +211,13 @@ button {
 .mascot-body.thinking { transform: scale(1); }
 .mascot-body.thinking .mascot-eyes { transform: translateY(0) translateX(5px); }
 
-/* Smirk (Correct) */
-.mascot-body.happy { background: radial-gradient(circle at 30% 30%, #5ecfe6, #1c8ea3); transform: scale(1.1); animation: none; }
+/* Green Smirk (Correct) */
+.mascot-body.happy { background: radial-gradient(circle at 30% 30%, #34d399, #059669); transform: scale(1.1); animation: none; filter: none !important; }
 .mascot-body.happy .mascot-eye { height: 16px; border-radius: 20px 20px 5px 5px; margin-top: 10px; }
 .mascot-body.happy .mascot-pupil { bottom: 0; left: 6px; }
 
-/* Gotcha Grin (Trap) */
-.mascot-body.shocked { background: radial-gradient(circle at 30% 30%, #ff8c73, #d9482b); transform: scale(1.1); animation: bounceHappy 0.4s; }
+/* Red Gotcha Grin (Trap) */
+.mascot-body.shocked { background: radial-gradient(circle at 30% 30%, #fca5a5, #dc2626); transform: scale(1.1); animation: bounceHappy 0.4s; filter: none !important; }
 .mascot-body.shocked .mascot-eye { height: 12px; border-radius: 5px 5px 20px 20px; margin-top: -5px; width: 28px; }
 .mascot-body.shocked .mascot-pupil { bottom: 0; left: 8px; width: 14px; height: 14px; }
 
@@ -199,7 +227,7 @@ button {
   background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
   padding: 8px 16px; border-radius: 20px; font-weight: 900; font-size: 1.1rem;
 }
-.score-text { color: var(--secondary); font-weight: 900; }
+.score-text { color: var(--secondary); font-weight: 900; text-shadow: 0 0 10px var(--secondary-glow); }
 .streak-text { color: var(--primary); font-weight: 900; text-shadow: 0 0 10px var(--primary-glow); }
 
 /* Animations */
@@ -214,29 +242,44 @@ button {
 }
 @keyframes crackWrong {
   0%, 100% { transform: translateX(0) rotate(0deg); }
-  25% { transform: translateX(-10px) rotate(-3deg); }
-  75% { transform: translateX(10px) rotate(3deg); }
+  25% { transform: translateX(-15px) rotate(-5deg); }
+  75% { transform: translateX(15px) rotate(5deg); }
 }
 @keyframes floatMascot {
   0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-10px); }
+  50% { transform: translateY(-15px); }
 }
 @keyframes bounceHappy {
   0%, 100% { transform: translateY(0) scale(1.1); }
-  50% { transform: translateY(-15px) scale(1.15); }
+  50% { transform: translateY(-15px) scale(1.2); }
 }
 @keyframes slideFadeIn {
-  from { opacity: 0; transform: translateY(10px); }
+  from { opacity: 0; transform: translateY(15px); }
   to { opacity: 1; transform: translateY(0); }
 }
-.slide-fade { animation: slideFadeIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+.slide-fade { animation: slideFadeIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
 
 .timer-pulse {
-  animation: pulseTimer 0.5s infinite alternate;
+  animation: pulseTimer 0.3s infinite alternate;
 }
 @keyframes pulseTimer {
   0% { opacity: 1; box-shadow: 0 0 10px var(--primary-glow); }
-  100% { opacity: 0.7; box-shadow: 0 0 20px var(--primary); }
+  100% { opacity: 0.5; box-shadow: 0 0 25px var(--primary); }
+}
+
+/* Background Animations */
+@keyframes bgShift {
+  0% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(-5%, 5%) scale(1.1); }
+  100% { transform: translate(5%, -5%) scale(1); }
+}
+@keyframes colorCycle {
+  0% { filter: hue-rotate(0deg); }
+  100% { filter: hue-rotate(360deg); }
+}
+@keyframes shimmer {
+  0% { transform: translateX(-150%) rotate(30deg); }
+  100% { transform: translateX(150%) rotate(30deg); }
 }
 
 /* Layout Utilities */
@@ -250,7 +293,7 @@ button {
 .bottom-nav {
   position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
   width: 100%; max-width: 480px;
-  background: rgba(17, 19, 24, 0.9);
+  background: rgba(15, 23, 42, 0.85);
   backdrop-filter: blur(20px);
   display: flex; justify-content: space-around;
   padding: 1rem 0 2rem 0;
@@ -260,7 +303,7 @@ button {
 .nav-item {
   display: flex; flex-direction: column; align-items: center;
   color: var(--text-muted); font-size: 0.8rem; font-weight: 900;
-  transition: all 0.2s; cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); cursor: pointer;
 }
-.nav-item.active { color: var(--secondary); transform: translateY(-4px); text-shadow: 0 0 10px var(--secondary-glow); }
+.nav-item.active { color: var(--secondary); transform: translateY(-6px) scale(1.1); text-shadow: 0 0 15px var(--secondary-glow); }
 .nav-icon { font-size: 1.5rem; margin-bottom: 4px; }

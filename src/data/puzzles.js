@@ -210,7 +210,7 @@ export const PUZZLES = [
   {
     id: 19,
     type: 'visual',
-    question: 'Count the number of F\\'s in: "Finished files are the result of years of scientific study combined with the experience of years."',
+    question: `Count the number of F's in: "Finished files are the result of years of scientific study combined with the experience of years."`,
     options: [
       { text: '3', isCorrect: false },
       { text: '4', isCorrect: false },

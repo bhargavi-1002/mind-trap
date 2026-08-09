@@ -1,234 +1,178 @@
 export const PUZZLES = [
   {
-    id: 1,
-    type: 'meta',
-    question: 'Tap the green button.',
-    options: [
-      { text: 'RED', color: 'green', isCorrect: true },
-      { text: 'GREEN', color: 'red', isCorrect: false },
-      { text: 'BLUE', color: 'blue', isCorrect: false }
-    ],
-    timeLimit: 7
+    id: "logic_001",
+    category: "logic",
+    difficulty: 1,
+    question: "You are running a race and you pass the person in 2nd place. What place are you in now?",
+    options: ["1st place", "2nd place", "3rd place"],
+    correctIndex: 1,
+    trapIndex: 0,
+    trapExplanation: "Your brain assumes passing someone means you take the lead, but you actually just take their spot in 2nd.",
+    timerSeconds: 15
   },
   {
-    id: 2,
-    type: 'logic',
-    question: 'Some months have 31 days. How many have 28?',
-    options: [
-      { text: '1', isCorrect: false },
-      { text: '12', isCorrect: true },
-      { text: '6', isCorrect: false },
-      { text: 'Depends on leap year', isCorrect: false }
-    ],
-    timeLimit: 10
+    id: "math_001",
+    category: "math",
+    difficulty: 1,
+    question: "A bat and a ball cost $1.10 in total. The bat costs $1.00 more than the ball. How much does the ball cost?",
+    options: ["10 cents", "5 cents", "1 dollar"],
+    correctIndex: 1,
+    trapIndex: 0,
+    trapExplanation: "The brain instinctively subtracts 1.00 from 1.10, but if the ball is 10 cents, the bat would be $1.10, making the total $1.20.",
+    timerSeconds: 15
   },
   {
-    id: 3,
-    type: 'trick',
-    question: "Don't press the button.",
-    options: [
-      { text: 'PRESS ME', isCorrect: false }
-    ],
-    timeLimit: 5,
-    requiresWait: true
+    id: "pattern_001",
+    category: "pattern",
+    difficulty: 1,
+    question: "How many months have 28 days?",
+    options: ["1", "12", "None"],
+    correctIndex: 1,
+    trapIndex: 0,
+    trapExplanation: "You immediately think of February, but EVERY month has at least 28 days.",
+    timerSeconds: 12
   },
   {
-    id: 4,
-    type: 'math',
-    question: 'What is half of 2 plus 2?',
-    options: [
-      { text: '2', isCorrect: false },
-      { text: '3', isCorrect: true },
-      { text: '4', isCorrect: false },
-      { text: '1', isCorrect: false }
-    ],
-    timeLimit: 10
+    id: "perception_001",
+    category: "perception",
+    difficulty: 2,
+    question: "If you have a bowl with six apples and you take away four, how many do you have?",
+    options: ["2", "4", "6"],
+    correctIndex: 1,
+    trapIndex: 0,
+    trapExplanation: "You do the math (6 - 4 = 2) for what's left in the bowl, but the question asks how many YOU have. You took 4.",
+    timerSeconds: 12
   },
   {
-    id: 5,
-    type: 'observation',
-    question: 'Which of these is not a real planet?',
-    options: [
-      { text: 'Mars', isCorrect: false },
-      { text: 'Pluto', isCorrect: true },
-      { text: 'Saturn', isCorrect: false },
-      { text: 'Neptune', isCorrect: false }
-    ],
-    timeLimit: 10
+    id: "riddle_001",
+    category: "riddle",
+    difficulty: 2,
+    question: "Some months have 31 days. How many have 30?",
+    options: ["4", "11", "5"],
+    correctIndex: 1,
+    trapIndex: 0,
+    trapExplanation: "You try to recall exactly which months have only 30 days, forgetting that 11 months have at least 30 days.",
+    timerSeconds: 12
   },
   {
-    id: 6,
-    type: 'reverse_logic',
-    question: 'Choose the WRONG answer.',
-    options: [
-      { text: '2 + 2 = 4', isCorrect: false },
-      { text: 'Fire is hot', isCorrect: false },
-      { text: 'Ice is cold', isCorrect: false },
-      { text: 'Water is dry', isCorrect: true }
-    ],
-    timeLimit: 7
+    id: "logic_002",
+    category: "logic",
+    difficulty: 2,
+    question: "Before Mt. Everest was discovered, what was the highest mountain in the world?",
+    options: ["Mt. Kilimanjaro", "Mt. Everest", "K2"],
+    correctIndex: 1,
+    trapIndex: 0,
+    trapExplanation: "It was always Mt. Everest, even before humans discovered it.",
+    timerSeconds: 10
   },
   {
-    id: 7,
-    type: 'visual',
-    question: 'Tap the word "BLUE" (not the color).',
-    options: [
-      { text: 'RED', color: 'blue', isCorrect: false },
-      { text: 'BLUE', color: 'green', isCorrect: true },
-      { text: 'GREEN', color: 'red', isCorrect: false }
-    ],
-    timeLimit: 5
+    id: "math_002",
+    category: "math",
+    difficulty: 3,
+    question: "If it takes 5 machines 5 minutes to make 5 widgets, how long would it take 100 machines to make 100 widgets?",
+    options: ["100 minutes", "5 minutes", "50 minutes"],
+    correctIndex: 1,
+    trapIndex: 0,
+    trapExplanation: "Your brain sees the pattern 5-5-5 and assumes 100-100-100, but each machine still takes 5 minutes to make its widget.",
+    timerSeconds: 10
   },
   {
-    id: 8,
-    type: 'trick',
-    question: 'How many letters are in the alphabet?',
-    options: [
-      { text: '26', isCorrect: false },
-      { text: '24', isCorrect: false },
-      { text: '11', isCorrect: true },
-      { text: '21', isCorrect: false }
-    ],
-    timeLimit: 10
+    id: "perception_002",
+    category: "perception",
+    difficulty: 2,
+    question: "A farmer has 17 sheep and all but 9 die. How many are left?",
+    options: ["8", "9", "0"],
+    correctIndex: 1,
+    trapIndex: 0,
+    trapExplanation: "You subtract 9 from 17, but the riddle literally says 'all but 9 die'.",
+    timerSeconds: 12
   },
   {
-    id: 9,
-    type: 'reaction',
-    question: 'Quick! Tap the smallest number.',
-    options: [
-      { text: '100', isCorrect: false },
-      { text: '10', isCorrect: false },
-      { text: '-5', isCorrect: true },
-      { text: '0', isCorrect: false }
-    ],
-    timeLimit: 4
+    id: "logic_003",
+    category: "logic",
+    difficulty: 1,
+    question: "Which is heavier: a ton of bricks or a ton of feathers?",
+    options: ["Bricks", "They weigh the same", "Feathers"],
+    correctIndex: 1,
+    trapIndex: 0,
+    trapExplanation: "Bricks feel heavier so your brain jumps to them, but a ton is a ton.",
+    timerSeconds: 10
   },
   {
-    id: 10,
-    type: 'meta',
-    question: 'The answer is hiding...',
-    options: [
-      { text: 'Where?', isCorrect: false },
-      { text: 'Here?', isCorrect: false },
-      { text: 'Behind you?', isCorrect: false },
-      { text: ' ', isCorrect: true, color: 'transparent' } // Invisible button trick
-    ],
-    timeLimit: 10
+    id: "math_003",
+    category: "math",
+    difficulty: 3,
+    question: "Lily pads double in size every day. If it takes 48 days for the lake to be covered, how long does it take to cover half?",
+    options: ["24 days", "47 days", "12 days"],
+    correctIndex: 1,
+    trapIndex: 0,
+    trapExplanation: "You naturally want to halve 48 to 24, but if it doubles every day, it was half full the day before (47).",
+    timerSeconds: 12
   },
   {
-    id: 11,
-    type: 'logic',
-    question: 'If you are running in a race and you pass the person in second place, what place are you in?',
-    options: [
-      { text: 'First', isCorrect: false },
-      { text: 'Second', isCorrect: true },
-      { text: 'Third', isCorrect: false },
-      { text: 'Last', isCorrect: false }
-    ],
-    timeLimit: 12
-  },
-  {
-    id: 12,
-    type: 'trick',
+    id: "riddle_002",
+    category: "riddle",
+    difficulty: 1,
     question: "Mary's father has 5 daughters: Nana, Nene, Nini, Nono. What is the name of the 5th?",
-    options: [
-      { text: 'Nunu', isCorrect: false },
-      { text: 'Mary', isCorrect: true },
-      { text: 'None', isCorrect: false },
-      { text: 'Nina', isCorrect: false }
-    ],
-    timeLimit: 12
+    options: ["Nunu", "Mary", "None"],
+    correctIndex: 1,
+    trapIndex: 0,
+    trapExplanation: "You follow the vowel pattern a, e, i, o, u... but the prompt started with 'Mary's father'.",
+    timerSeconds: 15
   },
   {
-    id: 13,
-    type: 'meta',
-    question: 'Do not tap the correct answer.',
-    options: [
-      { text: 'Wrong', isCorrect: true },
-      { text: 'Correct Answer', isCorrect: false }
-    ],
-    timeLimit: 7
+    id: "perception_003",
+    category: "perception",
+    difficulty: 2,
+    question: "How many two cent stamps are in a dozen?",
+    options: ["6", "12", "24"],
+    correctIndex: 1,
+    trapIndex: 0,
+    trapExplanation: "You try to divide by 2, but a dozen of anything is always 12.",
+    timerSeconds: 10
   },
   {
-    id: 14,
-    type: 'math',
-    question: 'Which is heavier: a ton of bricks or a ton of feathers?',
-    options: [
-      { text: 'Bricks', isCorrect: false },
-      { text: 'Feathers', isCorrect: false },
-      { text: 'Neither', isCorrect: true }
-    ],
-    timeLimit: 7
+    id: "logic_004",
+    category: "logic",
+    difficulty: 2,
+    question: "If a plane crashes on the border of the US and Canada, where do they bury the survivors?",
+    options: ["In the US", "You don't bury survivors", "In Canada"],
+    correctIndex: 1,
+    trapIndex: 0,
+    trapExplanation: "Your brain focuses on the political border rule, ignoring the word 'survivors'.",
+    timerSeconds: 12
   },
   {
-    id: 15,
-    type: 'reaction',
-    question: 'Tap the shape with three sides.',
-    options: [
-      { text: '⬛', isCorrect: false },
-      { text: '🔴', isCorrect: false },
-      { text: '⭐', isCorrect: false },
-      { text: '🔺', isCorrect: true }
-    ],
-    timeLimit: 3
+    id: "riddle_003",
+    category: "riddle",
+    difficulty: 2,
+    question: "I have branches, but no fruit, trunk or leaves. What am I?",
+    options: ["A tree in winter", "A bank", "A dead bush"],
+    correctIndex: 1,
+    trapIndex: 0,
+    trapExplanation: "You get stuck in the context of nature, missing the corporate definition of a branch.",
+    timerSeconds: 15
   },
   {
-    id: 16,
-    type: 'trick',
-    question: 'A plane crashes on the border of US and Canada. Where do they bury the survivors?',
-    options: [
-      { text: 'US', isCorrect: false },
-      { text: 'Canada', isCorrect: false },
-      { text: 'Nowhere', isCorrect: true },
-      { text: 'The Border', isCorrect: false }
-    ],
-    timeLimit: 10
+    id: "pattern_002",
+    category: "pattern",
+    difficulty: 3,
+    question: "If you write down all the numbers from 1 to 100, how many times do you write the digit 9?",
+    options: ["10", "20", "11"],
+    correctIndex: 1,
+    trapIndex: 0,
+    trapExplanation: "You count the 9s in the ones place (9, 19, 29...) which is 10, but forget the 90s have ten 9s in the tens place.",
+    timerSeconds: 15
   },
   {
-    id: 17,
-    type: 'meta',
-    question: 'Tap the button that is upside down.',
-    options: [
-      { text: 'Button', isCorrect: false },
-      { text: 'uoʇʇnB', isCorrect: true },
-      { text: 'Button', isCorrect: false }
-    ],
-    timeLimit: 5
-  },
-  {
-    id: 18,
-    type: 'logic',
-    question: 'I speak without a mouth and hear without ears. I have no body, but I come alive with wind. What am I?',
-    options: [
-      { text: 'A ghost', isCorrect: false },
-      { text: 'An echo', isCorrect: true },
-      { text: 'A shadow', isCorrect: false },
-      { text: 'A tree', isCorrect: false }
-    ],
-    timeLimit: 15
-  },
-  {
-    id: 19,
-    type: 'visual',
-    question: `Count the number of F's in: "Finished files are the result of years of scientific study combined with the experience of years."`,
-    options: [
-      { text: '3', isCorrect: false },
-      { text: '4', isCorrect: false },
-      { text: '5', isCorrect: false },
-      { text: '6', isCorrect: true }
-    ],
-    timeLimit: 15
-  },
-  {
-    id: 20,
-    type: 'trick',
-    question: 'Before Mt. Everest was discovered, what was the highest mountain in the world?',
-    options: [
-      { text: 'Mt. Kilimanjaro', isCorrect: false },
-      { text: 'Mt. Everest', isCorrect: true },
-      { text: 'K2', isCorrect: false },
-      { text: 'The Alps', isCorrect: false }
-    ],
-    timeLimit: 10
+    id: "logic_005",
+    category: "logic",
+    difficulty: 2,
+    question: "A rooster lays an egg on the peak of a barn roof. Which side does it roll down?",
+    options: ["Left side", "Right side", "Neither"],
+    correctIndex: 2,
+    trapIndex: 0,
+    trapExplanation: "Your brain tries to solve the physics problem, missing that roosters don't lay eggs.",
+    timerSeconds: 10
   }
 ];

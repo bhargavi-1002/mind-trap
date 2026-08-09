@@ -41,22 +41,22 @@ const playSound = (type) => {
   } catch(e) {}
 };
 
-// Replace CSS blob mascot with High-Quality 3D Animated Film Generated Assets
-const Mascot = ({ state, size = '80px', borderRadius = '50%' }) => {
-  let imgSource = '/assets/mascot_thinking.jpg';
-  if (state === 'happy') imgSource = '/assets/mascot_happy.jpg';
-  if (state === 'shocked') imgSource = '/assets/mascot_shocked.jpg';
+// 3D Pixar Cute Princess Avatar (Emoji inside glowing orb - glitch free!)
+const PrincessAvatar = ({ state, size = '80px' }) => {
+  let emoji = '👸🏼';
+  if (state === 'happy') emoji = '🥰';
+  if (state === 'shocked') emoji = '😱';
   
   return (
-    <div style={{ width: size, height: size, borderRadius: borderRadius, overflow: 'hidden', boxShadow: '0 8px 20px rgba(0,0,0,0.15)' }}>
-      <img src={imgSource} alt={`Mascot ${state}`} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+    <div className={`princess-avatar ${state}`} style={{ width: size, height: size, fontSize: `calc(${size} * 0.6)` }}>
+      {emoji}
     </div>
   );
 };
 
 const Particles = ({ active, type }) => {
   if (!active) return null;
-  const emojis = type === 'correct' ? ['✨', '⭐', '🪙'] : ['💨'];
+  const emojis = type === 'correct' ? ['✨', '💖', '👑'] : ['💨'];
   return (
     <>
       {Array.from({ length: 6 }).map((_, i) => (
@@ -84,7 +84,7 @@ export default function App() {
   const [lives, setLives] = useState(3);
   const [combo, setCombo] = useState(0);
   
-  const [mascotState, setMascotState] = useState('thinking');
+  const [mascotState, setMascotState] = useState('');
   const [interactionState, setInteractionState] = useState(null);
   const [selectedOption, setSelectedOption] = useState(null);
 
@@ -108,7 +108,7 @@ export default function App() {
   const nextPuzzle = () => {
     setInteractionState(null);
     setSelectedOption(null);
-    setMascotState('thinking');
+    setMascotState('');
     
     const available = PUZZLES.filter(p => !playedPuzzles.includes(p.id));
     if (available.length === 0) {
@@ -157,16 +157,16 @@ export default function App() {
   const renderNav = () => (
     <div className="bottom-nav">
       <div className={`nav-item ${nav === 'HOME' ? 'active' : ''}`} onClick={() => switchNav('HOME')}>
-        <div className="nav-icon">🏠</div><div>Home</div>
+        <div className="nav-icon">🏰</div><div>Castle</div>
       </div>
       <div className={`nav-item ${nav === 'PLAY' ? 'active' : ''}`} onClick={() => switchNav('PLAY')}>
         <div className="nav-icon">🧩</div><div>Play</div>
       </div>
       <div className={`nav-item ${nav === 'LEADERBOARD' ? 'active' : ''}`} onClick={() => switchNav('LEADERBOARD')}>
-        <div className="nav-icon">🏆</div><div>Rank</div>
+        <div className="nav-icon">👑</div><div>Royal Rank</div>
       </div>
       <div className={`nav-item ${nav === 'PROFILE' ? 'active' : ''}`} onClick={() => switchNav('PROFILE')}>
-        <div className="nav-icon">👤</div><div>Profile</div>
+        <div className="nav-icon">👸</div><div>Profile</div>
       </div>
     </div>
   );
@@ -180,46 +180,45 @@ export default function App() {
           <div className="slide-fade flex-col gap-4">
             <div className="top-header" style={{ padding: 0 }}>
               <div className="profile-pill">
-                <div className="avatar">😎</div>
+                <div className="avatar">👸</div>
                 <div>
-                  <p style={{ fontSize: '0.9rem', color: 'var(--text-muted)' }}>Hi, Player 👋</p>
+                  <p style={{ fontSize: '0.9rem', color: 'var(--text-muted)' }}>Hello, Princess ✨</p>
                   <p style={{ fontWeight: 800 }}>Ready to play?</p>
                 </div>
               </div>
               <div className="stats-pill">
-                <div className="stat-badge">🔥 3</div>
+                <div className="stat-badge">💖 3</div>
                 <div className="stat-badge">🪙 120</div>
               </div>
             </div>
 
-            <div className="hero-card" style={{ padding: 0, backgroundImage: 'url(/assets/home_scene.jpg)', backgroundSize: 'cover', backgroundPosition: 'center', height: '220px', display: 'flex', alignItems: 'flex-end' }}>
+            <div className="hero-card" style={{ padding: 0, backgroundImage: 'url(/assets/princess_home_scene.jpg)', backgroundSize: 'cover', backgroundPosition: 'center', height: '220px', display: 'flex', alignItems: 'flex-end' }}>
               <div style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.8), transparent)', width: '100%', padding: '2rem 1.5rem 1.5rem 1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <div>
-                  <h1 style={{ fontSize: '2.5rem', marginBottom: '5px', color: 'white' }}>MIND TRAP</h1>
-                  <p style={{ opacity: 0.9, color: '#f0f0f0' }}>"Think twice."</p>
+                  <h1 style={{ fontSize: '2.5rem', marginBottom: '5px', color: 'white' }}>ROYAL TRAP</h1>
+                  <p style={{ opacity: 0.9, color: '#f0f0f0' }}>"A Magical Puzzle."</p>
                 </div>
-                <button className="btn-secondary" style={{ color: 'var(--primary)', padding: '0.8rem 1.5rem' }} onClick={() => switchNav('PLAY')}>
+                <button className="btn-primary" style={{ padding: '0.8rem 1.5rem' }} onClick={() => switchNav('PLAY')}>
                   PLAY NOW
                 </button>
               </div>
             </div>
 
-            {/* Daily Challenge Card - Using the 3D Puzzle Box Image */}
-            <h3 style={{ marginTop: '10px' }}>Daily Trap</h3>
+            <h3 style={{ marginTop: '10px' }}>Daily Magic Trap</h3>
             <div className="card" style={{ display: 'flex', alignItems: 'center', gap: '15px', padding: '1rem' }} onClick={() => switchNav('PLAY')}>
               <div style={{ width: '80px', height: '80px', borderRadius: '15px', overflow: 'hidden', flexShrink: 0, boxShadow: '0 4px 10px rgba(0,0,0,0.1)' }}>
                 <img src="/assets/puzzle_box.jpg" alt="Daily Puzzle Box" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
               </div>
               <div style={{ flex: 1 }}>
                 <h3>The Mystery Box</h3>
-                <p style={{ fontSize: '0.9rem', color: 'var(--text-muted)' }}>Can you solve today's trick?</p>
+                <p style={{ fontSize: '0.9rem', color: 'var(--text-muted)' }}>Solve today's royal trick!</p>
                 <div style={{ color: 'var(--accent-yellow)', fontWeight: 800, marginTop: '4px' }}>🔥 3 Day Streak</div>
               </div>
             </div>
 
-            <h3 style={{ marginTop: '10px' }}>Continue Playing</h3>
+            <h3 style={{ marginTop: '10px' }}>Continue Quest</h3>
             <div className="card" style={{ display: 'flex', alignItems: 'center', gap: '15px' }} onClick={() => switchNav('PLAY')}>
-              <Mascot state="thinking" size="60px" borderRadius="15px" />
+              <PrincessAvatar state="thinking" size="60px" />
               <div style={{ flex: 1 }}>
                 <h3>Level 27</h3>
                 <div style={{ background: 'var(--bg-main)', height: '8px', borderRadius: '4px', margin: '8px 0', overflow: 'hidden' }}>
@@ -229,19 +228,19 @@ export default function App() {
               </div>
             </div>
 
-            <h3 style={{ marginTop: '10px' }}>Game Modes</h3>
+            <h3 style={{ marginTop: '10px' }}>Magic Modes</h3>
             <div className="mode-card">
               <div className="mode-icon">⚡</div>
-              <div><h3>Quick Trap</h3><p style={{ color: 'var(--text-muted)' }}>Fast paced puzzles</p></div>
+              <div><h3>Quick Spell</h3><p style={{ color: 'var(--text-muted)' }}>Fast paced puzzles</p></div>
             </div>
             <div className="mode-card">
-              <div className="mode-icon">🧪</div>
+              <div className="mode-icon">🔮</div>
               <div><h3>Logic Lab</h3><p style={{ color: 'var(--text-muted)' }}>Test your reasoning</p></div>
             </div>
             
             <div style={{ display: 'flex', justifyContent: 'center', marginTop: '10px' }}>
               <button className="btn-secondary" onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}>
-                Toggle Theme ({theme})
+                Toggle Night Magic ({theme})
               </button>
             </div>
           </div>
@@ -250,8 +249,8 @@ export default function App() {
         {/* PLAY SELECTION & WORLD MAP */}
         {nav === 'PLAY' && playState === 'IDLE' && (
           <div className="slide-fade flex-col gap-4 text-center">
-            <h1 style={{ marginTop: '20px' }}>World Progression</h1>
-            <p style={{ color: 'var(--text-muted)' }}>Chapter 1: The Study Room</p>
+            <h1 style={{ marginTop: '20px' }}>Kingdom Progression</h1>
+            <p style={{ color: 'var(--text-muted)' }}>Chapter 1: The Royal Study</p>
             
             <div className="world-map-container">
               {Array.from({ length: 6 }).map((_, i) => (
@@ -265,7 +264,7 @@ export default function App() {
             </div>
 
             <div className="card mt-4" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-              <Mascot state="thinking" size="120px" />
+              <PrincessAvatar state="thinking" size="120px" />
               <h2 className="mt-4 mb-2">Level 4</h2>
               <p style={{ color: 'var(--text-muted)', marginBottom: '20px' }}>Logic & Observation</p>
               <button className="btn-primary" style={{ width: '100%' }} onClick={startLevel}>START LEVEL</button>
@@ -279,14 +278,14 @@ export default function App() {
             <div className="top-header" style={{ padding: '0 0 1rem 0' }}>
               <div style={{ display: 'flex', gap: '5px', fontSize: '1.5rem' }}>
                 {Array.from({ length: 3 }).map((_, i) => (
-                  <span key={i} style={{ opacity: i < lives ? 1 : 0.2, filter: i < lives ? 'none' : 'grayscale(1)' }}>❤️</span>
+                  <span key={i} style={{ opacity: i < lives ? 1 : 0.2, filter: i < lives ? 'none' : 'grayscale(1)' }}>💖</span>
                 ))}
               </div>
-              <div className="stat-badge" style={{ fontSize: '1.2rem', color: 'var(--primary)' }}>⭐ {score}</div>
+              <div className="stat-badge" style={{ fontSize: '1.2rem', color: 'var(--primary)' }}>👑 {score}</div>
             </div>
 
             <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '20px', minHeight: '100px' }}>
-              <Mascot state={mascotState} size="100px" />
+              <PrincessAvatar state={mascotState} size="100px" />
             </div>
 
             <Particles active={!!interactionState} type={interactionState} />
@@ -301,7 +300,7 @@ export default function App() {
                 if (interactionState && selectedOption === i) {
                   btnClass += opt.isCorrect ? " correct" : " wrong";
                 } else if (interactionState && opt.isCorrect) {
-                  btnClass += " correct"; // highlight correct if they got it wrong
+                  btnClass += " correct"; 
                 }
                 return (
                   <button 
@@ -325,11 +324,11 @@ export default function App() {
         {nav === 'PLAY' && playState === 'RESULT' && (
           <div className="slide-fade flex-col gap-4 text-center mt-4">
             <div style={{ display: 'flex', justifyContent: 'center' }}>
-              <Mascot state={lives <= 0 ? 'shocked' : 'happy'} size="150px" />
+              <PrincessAvatar state={lives <= 0 ? 'shocked' : 'happy'} size="150px" />
             </div>
             
             <h1 style={{ color: lives <= 0 ? 'var(--danger)' : 'var(--accent-mint)' }}>
-              {lives <= 0 ? 'OUT OF LIVES' : 'LEVEL COMPLETE! 🎉'}
+              {lives <= 0 ? 'OH NO!' : 'ROYAL VICTORY! 🎉'}
             </h1>
             
             <div className="card text-center mb-4">
@@ -345,7 +344,7 @@ export default function App() {
               {lives <= 0 ? 'TRY AGAIN' : 'NEXT LEVEL →'}
             </button>
             <button className="btn-secondary mt-2" style={{ width: '100%' }} onClick={() => switchNav('HOME')}>
-              HOME
+              RETURN TO CASTLE
             </button>
           </div>
         )}
@@ -353,28 +352,28 @@ export default function App() {
         {/* MOCK SCREENS */}
         {nav === 'LEADERBOARD' && (
           <div className="slide-fade text-center mt-4">
-            <h1>Leaderboard</h1>
-            <p style={{ color: 'var(--text-muted)', marginBottom: '20px' }}>Weekly Top Players</p>
+            <h1>Royal Rank</h1>
+            <p style={{ color: 'var(--text-muted)', marginBottom: '20px' }}>Top Princesses</p>
             
             <div className="card" style={{ marginBottom: '10px', background: 'var(--accent-yellow)', color: '#2b2b45' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
-                <h2>🥇</h2><div className="avatar" style={{ overflow: 'hidden' }}><img src="/assets/mascot_happy.jpg" style={{ width: '100%', height: '100%', objectFit: 'cover' }} /></div><h3 className="spacer" style={{textAlign:'left'}}>FoxyGenius</h3><h2>9420</h2>
+                <h2>🥇</h2><div className="avatar">👸🏼</div><h3 className="spacer" style={{textAlign:'left'}}>ElsaFan</h3><h2>9420</h2>
               </div>
             </div>
             <div className="card" style={{ marginBottom: '10px', background: '#d7d7d7', color: '#2b2b45' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
-                <h2>🥈</h2><div className="avatar" style={{ overflow: 'hidden' }}><img src="/assets/mascot_thinking.jpg" style={{ width: '100%', height: '100%', objectFit: 'cover' }} /></div><h3 className="spacer" style={{textAlign:'left'}}>PandaPro</h3><h2>8100</h2>
+                <h2>🥈</h2><div className="avatar">👸🏽</div><h3 className="spacer" style={{textAlign:'left'}}>MoanaPro</h3><h2>8100</h2>
               </div>
             </div>
             <div className="card" style={{ marginBottom: '10px', background: '#e0a96d', color: '#2b2b45' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
-                <h2>🥉</h2><div className="avatar" style={{ overflow: 'hidden' }}><img src="/assets/mascot_shocked.jpg" style={{ width: '100%', height: '100%', objectFit: 'cover' }} /></div><h3 className="spacer" style={{textAlign:'left'}}>TigerMind</h3><h2>7530</h2>
+                <h2>🥉</h2><div className="avatar">👸🏻</div><h3 className="spacer" style={{textAlign:'left'}}>SnowWhite</h3><h2>7530</h2>
               </div>
             </div>
             
             <div className="card mt-4" style={{ border: '2px solid var(--primary)' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
-                <h2>42</h2><div className="avatar">😎</div><h3 className="spacer" style={{textAlign:'left'}}>You</h3><h2>2100</h2>
+                <h2>42</h2><div className="avatar">👸</div><h3 className="spacer" style={{textAlign:'left'}}>You</h3><h2>2100</h2>
               </div>
             </div>
           </div>
@@ -383,33 +382,33 @@ export default function App() {
         {nav === 'PROFILE' && (
           <div className="slide-fade text-center mt-4">
             <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '10px' }}>
-              <Mascot state="happy" size="120px" borderRadius="30px" />
+              <PrincessAvatar state="happy" size="120px" />
             </div>
-            <h1>Player One</h1>
+            <h1>Princess Player</h1>
             <p style={{ color: 'var(--text-muted)', marginBottom: '20px' }}>Level 5 Explorer</p>
             
             <div className="card mb-4">
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }}>
                 <div className="stat-badge" style={{ flexDirection: 'column', padding: '15px' }}>
-                  <h2 style={{ color: 'var(--primary)' }}>32</h2><p>Games</p>
+                  <h2 style={{ color: 'var(--primary)' }}>32</h2><p>Quests</p>
                 </div>
                 <div className="stat-badge" style={{ flexDirection: 'column', padding: '15px' }}>
-                  <h2 style={{ color: 'var(--accent-mint)' }}>94%</h2><p>Accuracy</p>
+                  <h2 style={{ color: 'var(--accent-mint)' }}>94%</h2><p>Magic</p>
                 </div>
                 <div className="stat-badge" style={{ flexDirection: 'column', padding: '15px' }}>
-                  <h2 style={{ color: 'var(--accent-yellow)' }}>12</h2><p>Best Streak</p>
+                  <h2 style={{ color: 'var(--accent-yellow)' }}>12</h2><p>Streak</p>
                 </div>
                 <div className="stat-badge" style={{ flexDirection: 'column', padding: '15px' }}>
-                  <h2 style={{ color: 'var(--secondary)' }}>450</h2><p>Coins</p>
+                  <h2 style={{ color: 'var(--secondary)' }}>450</h2><p>Gold</p>
                 </div>
               </div>
             </div>
 
-            <h3 style={{ textAlign: 'left', marginBottom: '10px' }}>Achievements</h3>
+            <h3 style={{ textAlign: 'left', marginBottom: '10px' }}>Treasures</h3>
             <div style={{ display: 'flex', gap: '10px', overflowX: 'auto', paddingBottom: '10px' }}>
-              <div className="card" style={{ minWidth: '100px', textAlign: 'center', padding: '15px' }}>🏆<br/>First Win</div>
-              <div className="card" style={{ minWidth: '100px', textAlign: 'center', padding: '15px' }}>🔥<br/>10 Streak</div>
-              <div className="card" style={{ minWidth: '100px', textAlign: 'center', padding: '15px' }}>⚡<br/>Speed Pro</div>
+              <div className="card" style={{ minWidth: '100px', textAlign: 'center', padding: '15px' }}>👑<br/>First Crown</div>
+              <div className="card" style={{ minWidth: '100px', textAlign: 'center', padding: '15px' }}>💖<br/>True Love</div>
+              <div className="card" style={{ minWidth: '100px', textAlign: 'center', padding: '15px' }}>🦄<br/>Magic Pro</div>
             </div>
           </div>
         )}

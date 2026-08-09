@@ -1,36 +1,38 @@
 @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap');
 
 :root {
-  /* Default Light Theme */
-  --bg-main: #f0f4ff;
+  /* Princess Theme (Light) */
+  --bg-main: #fff0f5; /* Lavender Blush */
   --bg-card: #ffffff;
-  --text-main: #2b2b45;
-  --text-muted: #79799c;
-  --primary: #8a4fff;
-  --primary-hover: #7b42ef;
-  --primary-light: #eaddff;
-  --secondary: #43b3ff;
-  --accent-yellow: #ffcf54;
-  --accent-mint: #4ade80;
-  --danger: #ff5a7e;
-  --shadow-color: rgba(138, 79, 255, 0.15);
-  --card-shadow: 0 12px 24px rgba(43, 43, 69, 0.05), 0 4px 8px rgba(43, 43, 69, 0.03);
-  --btn-shadow: 0 8px 0 rgba(110, 50, 220, 0.5);
-  --btn-shadow-secondary: 0 8px 0 rgba(200, 200, 220, 0.5);
+  --text-main: #4a235a;
+  --text-muted: #8e44ad;
+  --primary: #ff69b4; /* Hot Pink */
+  --primary-hover: #ff1493;
+  --primary-light: #ffb6c1;
+  --secondary: #ffd700; /* Gold */
+  --accent-yellow: #ffdf00;
+  --accent-mint: #00fa9a;
+  --danger: #ff4500;
+  --shadow-color: rgba(255, 105, 180, 0.2);
+  --card-shadow: 0 12px 24px rgba(74, 35, 90, 0.08), 0 4px 8px rgba(74, 35, 90, 0.04);
+  --btn-shadow: 0 8px 0 #c71585;
+  --btn-shadow-secondary: 0 8px 0 #e6e6fa;
 }
 
 .theme-dark {
-  --bg-main: #13132b;
-  --bg-card: #1f1f3d;
-  --text-main: #ffffff;
-  --text-muted: #9fa0c3;
-  --primary: #9d6eff;
-  --primary-hover: #8f5df2;
-  --primary-light: #2b1f4c;
-  --shadow-color: rgba(0, 0, 0, 0.3);
-  --card-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
-  --btn-shadow: 0 8px 0 rgba(90, 40, 180, 0.5);
-  --btn-shadow-secondary: 0 8px 0 rgba(20, 20, 40, 0.5);
+  /* Princess Theme (Dark/Night Magic) */
+  --bg-main: #190a2a;
+  --bg-card: #2c1340;
+  --text-main: #f8f8ff;
+  --text-muted: #dda0dd;
+  --primary: #ff1493;
+  --primary-hover: #ff69b4;
+  --primary-light: #4b0082;
+  --secondary: #ffd700;
+  --shadow-color: rgba(255, 20, 147, 0.4);
+  --card-shadow: 0 12px 24px rgba(0, 0, 0, 0.4);
+  --btn-shadow: 0 8px 0 #8b008b;
+  --btn-shadow-secondary: 0 8px 0 #1e0b33;
 }
 
 * {
@@ -59,8 +61,8 @@ body {
   display: flex;
   flex-direction: column;
   background-image: 
-    radial-gradient(circle at 10% 20%, rgba(138, 79, 255, 0.08) 0%, transparent 40%),
-    radial-gradient(circle at 90% 80%, rgba(67, 179, 255, 0.08) 0%, transparent 40%);
+    radial-gradient(circle at 10% 20%, rgba(255, 105, 180, 0.1) 0%, transparent 40%),
+    radial-gradient(circle at 90% 80%, rgba(255, 215, 0, 0.1) 0%, transparent 40%);
   overflow-y: auto;
   overflow-x: hidden;
   padding-bottom: 90px;
@@ -94,11 +96,11 @@ button:active {
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, var(--primary), #a67cff);
+  background: linear-gradient(135deg, var(--primary), #ff8c00);
   color: white;
   box-shadow: var(--btn-shadow);
 }
-.btn-primary:active { box-shadow: 0 2px 0 rgba(110, 50, 220, 0.5) !important; }
+.btn-primary:active { box-shadow: 0 2px 0 #c71585 !important; }
 
 .btn-secondary {
   background: var(--bg-card);
@@ -106,7 +108,7 @@ button:active {
   box-shadow: var(--btn-shadow-secondary);
   border: 2px solid var(--primary-light);
 }
-.btn-secondary:active { box-shadow: 0 2px 0 rgba(200, 200, 220, 0.5) !important; }
+.btn-secondary:active { box-shadow: 0 2px 0 #e6e6fa !important; }
 
 .btn-answer {
   background: var(--bg-card);
@@ -118,19 +120,19 @@ button:active {
   transition: all 0.2s;
   width: 100%;
 }
-.btn-answer:active { box-shadow: 0 2px 0 rgba(200, 200, 220, 0.5); transform: translateY(6px); }
+.btn-answer:active { box-shadow: 0 2px 0 #e6e6fa; transform: translateY(6px); }
 
 .btn-answer.correct {
   background: var(--accent-mint);
   color: white;
-  border-color: #2b9e55;
-  box-shadow: 0 8px 0 #2b9e55;
+  border-color: #008000;
+  box-shadow: 0 8px 0 #008000;
 }
 .btn-answer.wrong {
   background: var(--danger);
   color: white;
-  border-color: #c93455;
-  box-shadow: 0 8px 0 #c93455;
+  border-color: #8b0000;
+  box-shadow: 0 8px 0 #8b0000;
   animation: shake 0.4s ease;
 }
 
@@ -140,7 +142,7 @@ button:active {
   border-radius: 24px;
   padding: 1.5rem;
   box-shadow: var(--card-shadow);
-  border: 2px solid rgba(255, 255, 255, 0.4);
+  border: 2px solid rgba(255, 192, 203, 0.4);
 }
 
 .hero-card {
@@ -196,7 +198,7 @@ button:active {
 }
 .avatar {
   width: 45px; height: 45px;
-  background: var(--accent-yellow);
+  background: var(--secondary);
   border-radius: 50%;
   border: 3px solid white;
   display: flex; justify-content: center; align-items: center;
@@ -215,34 +217,34 @@ button:active {
   box-shadow: var(--card-shadow);
 }
 
-/* Mascot (Cute Bubble Style) */
-.cute-mascot {
-  width: 80px; height: 80px;
-  background: var(--accent-yellow);
-  border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
+/* Princess Avatar Container (Fallback for 3D generation limit) */
+.princess-avatar {
+  background: radial-gradient(circle at 30% 30%, #fff, #ffd700);
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 10px 20px rgba(255, 215, 0, 0.3), inset 0 -5px 15px rgba(255, 105, 180, 0.4);
+  border: 4px solid white;
+  transition: all 0.3s ease;
   position: relative;
-  box-shadow: inset -10px -10px 0 rgba(0,0,0,0.1), 0 10px 20px rgba(0,0,0,0.15);
-  animation: blobFloat 4s ease-in-out infinite;
 }
-.cute-mascot .face {
-  position: absolute; top: 40%; left: 50%; transform: translateX(-50%);
-  display: flex; gap: 10px;
+.princess-avatar::after {
+  content: '✨';
+  position: absolute;
+  top: -5px; right: -5px;
+  font-size: 1.5em;
+  animation: sparkle 2s infinite alternate;
 }
-.cute-mascot .eye {
-  width: 10px; height: 10px; background: #2b2b45; border-radius: 50%;
-  animation: blink 4s infinite;
+.princess-avatar.happy {
+  background: radial-gradient(circle at 30% 30%, #fff, #00fa9a);
+  box-shadow: 0 10px 20px rgba(0, 250, 154, 0.3), inset 0 -5px 15px rgba(0, 128, 0, 0.4);
 }
-.cute-mascot .mouth {
-  position: absolute; top: 15px; left: 50%; transform: translateX(-50%);
-  width: 10px; height: 5px; border-bottom: 3px solid #2b2b45; border-radius: 50%;
+.princess-avatar.shocked {
+  background: radial-gradient(circle at 30% 30%, #fff, #ff4500);
+  box-shadow: 0 10px 20px rgba(255, 69, 0, 0.3), inset 0 -5px 15px rgba(139, 0, 0, 0.4);
+  animation: shake 0.4s ease;
 }
-.cute-mascot.happy { background: var(--accent-mint); animation: bounceMascot 0.5s; }
-.cute-mascot.happy .mouth { width: 15px; height: 10px; border-radius: 0 0 10px 10px; background: #2b2b45; border: none; }
-.cute-mascot.shocked { background: var(--danger); animation: shake 0.4s; }
-.cute-mascot.shocked .eye { height: 15px; }
-.cute-mascot.shocked .mouth { width: 10px; height: 10px; background: #2b2b45; border: none; border-radius: 50%; }
-.cute-mascot.thinking { background: var(--secondary); }
-.cute-mascot.thinking .eye:nth-child(2) { transform: scale(1.5); }
 
 /* World Map (Horizontal Line) */
 .world-map-container {
@@ -267,7 +269,7 @@ button:active {
   z-index: 2;
 }
 .level-node.completed { background: var(--primary); color: white; border-color: var(--primary-light); }
-.level-node.current { background: var(--accent-yellow); color: var(--text-main); transform: scale(1.2); box-shadow: 0 0 20px var(--accent-yellow); }
+.level-node.current { background: var(--secondary); color: var(--text-main); transform: scale(1.2); box-shadow: 0 0 20px var(--secondary); }
 .level-line {
   min-width: 40px; height: 6px;
   background: var(--bg-card);
@@ -303,17 +305,9 @@ button:active {
   25% { transform: translateX(-8px); }
   75% { transform: translateX(8px); }
 }
-@keyframes blobFloat {
-  0%, 100% { border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%; transform: translateY(0); }
-  50% { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; transform: translateY(-10px); }
-}
-@keyframes bounceMascot {
-  0%, 100% { transform: translateY(0) scale(1); }
-  50% { transform: translateY(-20px) scale(1.1); }
-}
-@keyframes blink {
-  0%, 96%, 100% { transform: scaleY(1); }
-  98% { transform: scaleY(0.1); }
+@keyframes sparkle {
+  0% { transform: scale(0.8) rotate(0deg); opacity: 0.5; }
+  100% { transform: scale(1.2) rotate(20deg); opacity: 1; }
 }
 @keyframes slideFadeIn {
   from { opacity: 0; transform: translateY(20px) scale(0.95); }

@@ -1,55 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './index.css';
 
-// Small initial puzzle database for V1
-const PUZZLES = [
-  {
-    id: 1,
-    type: 'meta',
-    question: 'Tap the green button.',
-    options: [
-      { text: 'RED', color: 'green', isCorrect: true },
-      { text: 'GREEN', color: 'red', isCorrect: false },
-      { text: 'BLUE', color: 'blue', isCorrect: false }
-    ],
-    timeLimit: 7
-  },
-  {
-    id: 2,
-    type: 'logic',
-    question: 'Some months have 31 days. How many have 28?',
-    options: [
-      { text: '1', isCorrect: false },
-      { text: '12', isCorrect: true },
-      { text: '6', isCorrect: false },
-      { text: 'Depends on leap year', isCorrect: false }
-    ],
-    timeLimit: 10
-  },
-  {
-    id: 3,
-    type: 'trick',
-    question: 'Don\\'t press the button.',
-    options: [
-      { text: 'PRESS ME', isCorrect: false }
-    ],
-    timeLimit: 5,
-    requiresWait: true // player must wait out the timer
-  },
-  {
-    id: 4,
-    type: 'math',
-    question: 'What is half of 2 plus 2?',
-    options: [
-      { text: '2', isCorrect: false },
-      { text: '3', isCorrect: true },
-      { text: '4', isCorrect: false },
-      { text: '1', isCorrect: false }
-    ],
-    timeLimit: 10
-  }
-  // We can add more puzzles easily later.
-];
+import { PUZZLES } from './data/puzzles.js';
 
 export default function App() {
   const [gameState, setGameState] = useState('HOME'); // HOME, PLAYING, GAMEOVER, LEVEL_COMPLETE

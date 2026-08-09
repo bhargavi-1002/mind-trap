@@ -16,7 +16,6 @@ const playSound = (type) => {
       gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.1);
       osc.start(); osc.stop(ctx.currentTime + 0.1);
     } else if (type === 'correct') {
-      // Sharp, satisfying chime, high-pitched
       osc.type = 'sine';
       osc.frequency.setValueAtTime(880, ctx.currentTime);
       osc.frequency.setValueAtTime(1318.5, ctx.currentTime + 0.1);
@@ -24,7 +23,6 @@ const playSound = (type) => {
       gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.3);
       osc.start(); osc.stop(ctx.currentTime + 0.3);
     } else if (type === 'trap') {
-      // Playful slide whistle gotcha sound
       osc.type = 'sine';
       osc.frequency.setValueAtTime(600, ctx.currentTime);
       osc.frequency.exponentialRampToValueAtTime(200, ctx.currentTime + 0.4);
@@ -32,7 +30,6 @@ const playSound = (type) => {
       gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.4);
       osc.start(); osc.stop(ctx.currentTime + 0.4);
     } else if (type === 'milestone') {
-      // Rising pitch for streak
       osc.type = 'triangle';
       osc.frequency.setValueAtTime(440, ctx.currentTime);
       osc.frequency.linearRampToValueAtTime(880, ctx.currentTime + 0.2);
@@ -40,13 +37,20 @@ const playSound = (type) => {
       gain.gain.setValueAtTime(0.1, ctx.currentTime);
       gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.6);
       osc.start(); osc.stop(ctx.currentTime + 0.6);
+    } else if (type === 'boop') {
+      osc.type = 'square';
+      osc.frequency.setValueAtTime(400, ctx.currentTime);
+      osc.frequency.setValueAtTime(600, ctx.currentTime + 0.05);
+      gain.gain.setValueAtTime(0.1, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.1);
+      osc.start(); osc.stop(ctx.currentTime + 0.1);
     }
   } catch(e) {}
 };
 
-const Mascot = ({ state, scale = 1 }) => {
+const Mascot = ({ state, scale = 1, onClick }) => {
   return (
-    <div className="mascot-container" style={{ transform: `scale(${scale})` }}>
+    <div className="mascot-container" style={{ transform: `scale(${scale})` }} onClick={onClick}>
       <div className={`mascot-body ${state}`}>
         <div className="mascot-eyes">
           <div className="mascot-eye"><div className="mascot-pupil"></div></div>
@@ -67,7 +71,7 @@ export default function App() {
   const [playedPuzzles, setPlayedPuzzles] = useState([]);
   
   const [score, setScore] = useState(0);
-  const [displayScore, setDisplayScore] = useState(0); // For rapid counting
+  const [displayScore, setDisplayScore] = useState(0);
   const [lives, setLives] = useState(3);
   const [streak, setStreak] = useState(0);
   
@@ -75,13 +79,12 @@ export default function App() {
   const timerRef = useRef(null);
   const scoreIntervalRef = useRef(null);
   
-  const [mascotState, setMascotState] = useState('');
+  const [mascotState, setMascotState] = useState('thinking'); // thinking, happy, shocked, anxious, cool
   const [interactionState, setInteractionState] = useState(null);
   const [selectedOption, setSelectedOption] = useState(null);
   
-  const [flashScreen, setFlashScreen] = useState(null); // 'orange', 'streak'
+  const [flashScreen, setFlashScreen] = useState(null); 
 
-  // Score rolling animation
   useEffect(() => {
     if (displayScore < score) {
       if (scoreIntervalRef.current) clearInterval(scoreIntervalRef.current);
@@ -99,9 +102,24 @@ export default function App() {
     return () => clearInterval(scoreIntervalRef.current);
   }, [score, displayScore]);
 
+  // Mascot Anxious State check
+  useEffect(() => {
+    if (playState === 'PLAYING' && timeLeft > 0 && timeLeft < 300 && mascotState !== 'anxious') {
+      setMascotState('anxious');
+    }
+  }, [timeLeft, playState, mascotState]);
+
   const switchNav = (screen) => {
     playSound('tap');
     setNav(screen);
+  };
+
+  const pokeMascot = () => {
+    if (playState !== 'IDLE') return;
+    playSound('boop');
+    const states = ['shocked', 'happy', 'cool', 'thinking'];
+    setMascotState(states[Math.floor(Math.random() * states.length)]);
+    setTimeout(() => setMascotState('thinking'), 1000);
   };
 
   const startGame = (mode) => {
@@ -123,7 +141,7 @@ export default function App() {
     
     setInteractionState(null);
     setSelectedOption(null);
-    setMascotState('thinking');
+    setMascotState(streak >= 5 ? 'cool' : 'thinking');
     setPlayState('PLAYING');
     setFlashScreen(null);
     
@@ -178,13 +196,14 @@ export default function App() {
     if (opt.isCorrect) {
       playSound('correct');
       setInteractionState('correct');
-      setMascotState('happy'); // Delighted smirk
+      setMascotState('happy');
       
       const newStreak = streak + 1;
       setStreak(newStreak);
       if (newStreak === 5 || newStreak === 10) {
         playSound('milestone');
         triggerFlash('streak');
+        setTimeout(() => setMascotState('cool'), 800);
       }
       
       const multiplier = newStreak >= 10 ? 2 : newStreak >= 5 ? 1.5 : 1;
@@ -193,7 +212,7 @@ export default function App() {
     } else {
       playSound('trap');
       setInteractionState('wrong');
-      setMascotState('shocked'); // Gotcha grin
+      setMascotState('shocked');
       setStreak(0);
       triggerFlash('orange');
       
@@ -218,7 +237,7 @@ export default function App() {
   };
 
   const endGame = () => {
-    setMascotState(score > 500 ? 'happy' : 'shocked');
+    setMascotState(score > 500 ? 'cool' : 'shocked');
     setPlayState('RESULT');
   };
 
@@ -249,7 +268,7 @@ export default function App() {
                 <p style={{ marginTop: '10px', color: 'rgba(255,255,255,0.8)' }}>"Oh, I got baited."</p>
               </div>
               <div style={{ position: 'relative', zIndex: 1, marginRight: '-10px' }}>
-                <Mascot state="thinking" scale={0.9} />
+                <Mascot state={mascotState} scale={0.9} onClick={pokeMascot} />
               </div>
             </div>
 
@@ -356,7 +375,7 @@ export default function App() {
             </h1>
             
             <div style={{ display: 'flex', justifyContent: 'center', margin: '30px 0', minHeight: '140px' }}>
-              <Mascot state={mascotState} scale={1.2} />
+              <Mascot state={mascotState} scale={1.3} />
             </div>
 
             <div className="glass-panel" style={{ padding: '1.5rem', width: '100%', border: `2px solid ${interactionState === 'correct' ? 'var(--secondary)' : 'var(--primary)'}`, marginBottom: '20px' }}>
@@ -366,7 +385,7 @@ export default function App() {
               
               <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                 <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', textTransform: 'uppercase' }}>Correct Answer:</p>
-                <div style={{ background: 'rgba(62, 194, 224, 0.1)', color: 'var(--secondary)', padding: '12px', borderRadius: '10px', fontWeight: 900 }}>
+                <div style={{ background: 'rgba(16, 185, 129, 0.1)', color: 'var(--secondary)', padding: '12px', borderRadius: '10px', fontWeight: 900 }}>
                   {currentPuzzle.options[currentPuzzle.correctIndex]}
                 </div>
               </div>
@@ -386,7 +405,7 @@ export default function App() {
             <h1 style={{ fontSize: '2rem', color: 'white' }}>Run Summary</h1>
             
             <div style={{ display: 'flex', justifyContent: 'center', margin: '20px 0' }}>
-              <Mascot state={score > 500 ? 'happy' : 'shocked'} scale={1.2} />
+              <Mascot state={mascotState} scale={1.3} />
             </div>
             
             <div className="glass-panel text-center mb-4" style={{ padding: '2rem' }}>

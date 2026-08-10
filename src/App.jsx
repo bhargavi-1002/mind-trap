@@ -161,7 +161,10 @@ export default function App() {
   };
   
   const toggleLevel = (level) => {
-    setSelectedLevels(prev => prev.includes(level) ? prev.filter(l => l !== level) : [...prev, level]);
+    // Difficulty ladder: selecting a level includes all levels up to that difficulty
+    const newLevels = [];
+    for(let i = 1; i <= level; i++) newLevels.push(i);
+    setSelectedLevels(newLevels);
   };
 
 
@@ -363,99 +366,140 @@ export default function App() {
             
             <div style={{ flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '20px', paddingBottom: '10px' }}>
               <div className="glass-panel" style={{ padding: '20px' }}>
-                <h3 style={{ marginBottom: '15px', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '1px', fontSize: '0.9rem' }}>SELECT TOPICS</h3>
+                <h3 style={{ marginBottom: '15px', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '1px', fontSize: '0.9rem', display: 'flex', justifyContent: 'space-between' }}>
+                  <span>SELECT TOPICS</span>
+                  <span style={{ fontSize: '0.8rem', opacity: 0.7 }}>{selectedTopics.length} selected</span>
+                </h3>
                 <div style={{ 
                   display: 'grid', 
-                  gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', 
+                  gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', 
                   gap: '12px' 
                 }}>
                   {[
-                    { id: 'logic', label: 'Logic', icon: '🎯' },
+                    { id: 'logic', label: 'Logic', icon: '🧠' },
                     { id: 'math', label: 'Math', icon: '🔢' },
                     { id: 'pattern', label: 'Pattern', icon: '🧩' },
                     { id: 'perception', label: 'Perception', icon: '👁️' },
-                    { id: 'riddle', label: 'Riddle', icon: '🧠' },
-                    { id: 'science', label: 'Science', icon: '🔬' },
+                    { id: 'riddle', label: 'Riddle', icon: '📜' },
+                    { id: 'science', label: 'Science', icon: '🧪' },
                     { id: 'wordplay', label: 'Wordplay', icon: '🔤' }
                   ].map(topic => (
                     <button 
                       key={topic.id}
                       onClick={() => toggleTopic(topic.id)}
                       style={{
-                        padding: '12px 15px', 
+                        padding: '12px', 
                         borderRadius: '12px', 
-                        border: selectedTopics.includes(topic.id) ? '2px solid var(--primary)' : '2px solid transparent',
-                        background: selectedTopics.includes(topic.id) ? 'rgba(255, 215, 0, 0.1)' : 'rgba(255,255,255,0.05)',
-                        color: '#fff',
+                        border: selectedTopics.includes(topic.id) ? '2px solid var(--primary)' : '2px solid rgba(255,255,255,0.2)',
+                        background: selectedTopics.includes(topic.id) ? 'var(--primary)' : 'transparent',
+                        color: selectedTopics.includes(topic.id) ? '#000' : 'rgba(255,255,255,0.6)',
                         cursor: 'pointer',
                         display: 'flex',
                         alignItems: 'center',
+                        justifyContent: 'center',
                         gap: '8px',
                         transition: 'all 0.2s',
-                        boxShadow: selectedTopics.includes(topic.id) ? '0 0 10px rgba(255,215,0,0.2)' : 'none'
+                        boxShadow: selectedTopics.includes(topic.id) ? '0 0 15px rgba(255,215,0,0.3)' : 'none'
                       }}
                     >
-                      <span style={{ fontSize: '1.2rem' }}>{topic.icon}</span>
-                      <span style={{ fontWeight: selectedTopics.includes(topic.id) ? 'bold' : 'normal' }}>{topic.label}</span>
+                      <span style={{ fontSize: '1.2rem', filter: selectedTopics.includes(topic.id) ? 'none' : 'grayscale(100%) opacity(70%)' }}>{topic.icon}</span>
+                      <span style={{ fontWeight: 'bold' }}>{topic.label}</span>
                     </button>
                   ))}
                 </div>
               </div>
 
               <div className="glass-panel" style={{ padding: '20px' }}>
-                <h3 style={{ marginBottom: '15px', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '1px', fontSize: '0.9rem' }}>SELECT LEVELS</h3>
-                <div style={{ 
-                  display: 'flex', 
-                  flexWrap: 'wrap', 
-                  gap: '12px',
-                  justifyContent: 'center'
-                }}>
+                <h3 style={{ marginBottom: '15px', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '1px', fontSize: '0.9rem', display: 'flex', justifyContent: 'space-between' }}>
+                  <span>DIFFICULTY LADDER</span>
+                  <span style={{ fontSize: '0.8rem', opacity: 0.7 }}>
+                    Max: {['Novice', 'Adept', 'Sharp', 'Expert', 'Mastermind'][Math.max(0, selectedLevels.length - 1)] || 'None'}
+                  </span>
+                </h3>
+                
+                <div style={{ position: 'relative', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 0', overflowX: 'auto' }}>
+                  {/* Background track line */}
+                  <div style={{ position: 'absolute', top: '50%', left: '10%', right: '10%', height: '4px', background: 'rgba(255,255,255,0.1)', transform: 'translateY(-50%)', zIndex: 1, borderRadius: '2px' }}></div>
+                  
+                  {/* Filled track line */}
+                  <div style={{ 
+                    position: 'absolute', top: '50%', left: '10%', 
+                    width: `${((Math.max(1, selectedLevels.length) - 1) / 4) * 80}%`, 
+                    height: '4px', background: 'var(--secondary)', 
+                    transform: 'translateY(-50%)', zIndex: 2, borderRadius: '2px',
+                    transition: 'width 0.3s ease-out'
+                  }}></div>
+
                   {[
-                    { id: 1, icon: '①' },
-                    { id: 2, icon: '②' },
-                    { id: 3, icon: '③' },
-                    { id: 4, icon: '④' },
-                    { id: 5, icon: '⑤' }
-                  ].map(level => (
-                    <button 
-                      key={level.id}
-                      onClick={() => toggleLevel(level.id)}
-                      style={{
-                        flex: '1 1 auto',
-                        minWidth: '80px',
-                        padding: '12px', 
-                        borderRadius: '12px', 
-                        border: selectedLevels.includes(level.id) ? '2px solid var(--secondary)' : '2px solid transparent',
-                        background: selectedLevels.includes(level.id) ? 'rgba(0, 255, 204, 0.1)' : 'rgba(255,255,255,0.05)',
-                        color: '#fff',
-                        cursor: 'pointer',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        gap: '6px',
-                        transition: 'all 0.2s',
-                        boxShadow: selectedLevels.includes(level.id) ? '0 0 10px rgba(0,255,204,0.2)' : 'none'
-                      }}
-                    >
-                      <span style={{ fontSize: '1.1rem' }}>{level.icon}</span>
-                      <span style={{ fontWeight: selectedLevels.includes(level.id) ? 'bold' : 'normal' }}>Level {level.id}</span>
-                    </button>
-                  ))}
+                    { id: 1, label: 'Novice' },
+                    { id: 2, label: 'Adept' },
+                    { id: 3, label: 'Sharp' },
+                    { id: 4, label: 'Expert' },
+                    { id: 5, label: 'Mastermind' }
+                  ].map((level, index) => {
+                    const isSelected = selectedLevels.includes(level.id);
+                    const isMax = selectedLevels.length === level.id;
+                    return (
+                      <div 
+                        key={level.id} 
+                        onClick={() => toggleLevel(level.id)}
+                        style={{ 
+                          display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px',
+                          cursor: 'pointer', zIndex: 3, flex: 1, minWidth: '60px'
+                        }}
+                      >
+                        <div style={{
+                          width: isMax ? '32px' : '24px',
+                          height: isMax ? '32px' : '24px',
+                          borderRadius: '50%',
+                          background: isSelected ? 'var(--secondary)' : '#1a1d24',
+                          border: `3px solid ${isSelected ? 'var(--secondary)' : 'rgba(255,255,255,0.2)'}`,
+                          display: 'flex', alignItems: 'center', justifyContent: 'center',
+                          transition: 'all 0.2s',
+                          boxShadow: isMax ? '0 0 15px rgba(0,255,204,0.6)' : (isSelected ? '0 0 5px rgba(0,255,204,0.3)' : 'none'),
+                          color: isSelected ? '#000' : 'rgba(255,255,255,0.5)',
+                          fontWeight: 'bold',
+                          fontSize: '0.9rem'
+                        }}>
+                          {level.id}
+                        </div>
+                        <span style={{ 
+                          fontSize: '0.7rem', 
+                          fontWeight: isSelected ? 'bold' : 'normal',
+                          color: isSelected ? '#fff' : 'rgba(255,255,255,0.4)',
+                          textTransform: 'uppercase',
+                          transition: 'color 0.2s'
+                        }}>
+                          {level.label}
+                        </span>
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
             </div>
 
             <div style={{ display: 'flex', gap: '15px', marginTop: '10px', paddingTop: '15px', borderTop: '1px solid rgba(255,255,255,0.1)' }}>
               <button 
-                className="btn-answer" 
-                style={{ flex: 1, padding: '1.2rem', fontWeight: 'bold' }} 
+                style={{ 
+                  flex: 1, padding: '1.2rem', fontWeight: 'bold', 
+                  background: 'transparent', border: 'none', color: 'rgba(255,255,255,0.6)', 
+                  cursor: 'pointer', transition: 'color 0.2s' 
+                }} 
                 onClick={() => setSetupMode(false)}
+                onMouseOver={e => e.target.style.color = '#fff'}
+                onMouseOut={e => e.target.style.color = 'rgba(255,255,255,0.6)'}
               >
                 CANCEL
               </button>
               <button 
                 className="btn-primary" 
-                style={{ flex: 2, padding: '1.2rem', fontSize: '1.2rem', fontWeight: '900', letterSpacing: '1px' }} 
+                style={{ 
+                  flex: 2, padding: '1.2rem', fontSize: '1.2rem', fontWeight: '900', letterSpacing: '1px',
+                  opacity: (selectedTopics.length === 0 || selectedLevels.length === 0) ? 0.3 : 1,
+                  boxShadow: (selectedTopics.length === 0 || selectedLevels.length === 0) ? 'none' : '0 0 20px rgba(255,215,0,0.4)',
+                  transition: 'all 0.2s'
+                }} 
                 onClick={() => {
                   setSetupMode(false);
                   startGame(pendingGameMode);

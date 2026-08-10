@@ -3,7 +3,9 @@ import './index.css';
 import { PUZZLES } from './data/puzzles.js';
 
 const playSound = (type) => {
+  if (localStorage.getItem('mt_sound') === 'false') return;
   try {
+
     const ctx = new (window.AudioContext || window.webkitAudioContext)();
     const osc = ctx.createOscillator();
     const gain = ctx.createGain();
@@ -61,6 +63,12 @@ const Mascot = ({ state, scale = 1, onClick }) => {
   );
 };
 
+
+const playHaptic = (pattern = 50) => {
+  if (localStorage.getItem('mt_haptics') === 'false') return;
+  if (navigator.vibrate) navigator.vibrate(pattern);
+};
+
 export default function App() {
   const [nav, setNav] = useState('HOME');
   const [gameMode, setGameMode] = useState(null);
@@ -90,6 +98,21 @@ export default function App() {
   const [selectedOption, setSelectedOption] = useState(null);
   
   const [flashScreen, setFlashScreen] = useState(null);
+  const [soundEnabled, setSoundEnabled] = useState(() => localStorage.getItem('mt_sound') !== 'false');
+  const [hapticsEnabled, setHapticsEnabled] = useState(() => localStorage.getItem('mt_haptics') !== 'false');
+  
+  const toggleSound = () => {
+    const newVal = !soundEnabled;
+    setSoundEnabled(newVal);
+    localStorage.setItem('mt_sound', newVal ? 'true' : 'false');
+  };
+  
+  const toggleHaptics = () => {
+    const newVal = !hapticsEnabled;
+    setHapticsEnabled(newVal);
+    localStorage.setItem('mt_haptics', newVal ? 'true' : 'false');
+  };
+
   const allTopics = [...new Set(PUZZLES.map(p => p.category))];
   const [selectedTopics, setSelectedTopics] = useState(allTopics);
   const [selectedLevels, setSelectedLevels] = useState([1, 2, 3, 4, 5]);
@@ -128,12 +151,14 @@ export default function App() {
 
   const switchNav = (screen) => {
     playSound('tap');
+    playHaptic();
     setNav(screen);
   };
 
   const pokeMascot = () => {
     if (playState !== 'IDLE') return;
     playSound('boop');
+    playHaptic([30, 50, 30]);
     const states = ['shocked', 'happy', 'cool', 'thinking'];
     setMascotState(states[Math.floor(Math.random() * states.length)]);
     setTimeout(() => setMascotState('thinking'), 1000);
@@ -141,6 +166,7 @@ export default function App() {
 
   const startGame = (mode) => {
     playSound('tap');
+    playHaptic();
     setGameMode(mode);
     setScore(0);
     setDisplayScore(0);
@@ -152,6 +178,7 @@ export default function App() {
   
   const initiateGame = (mode) => {
     playSound('tap');
+    playHaptic();
     setPendingGameMode(mode);
     setSetupMode(true);
   };
@@ -218,6 +245,7 @@ export default function App() {
 
   const handleTimeout = () => {
     playSound('trap');
+      playHaptic([100, 50, 100]);
     setInteractionState('timeout');
     setMascotState('shocked');
     setStreak(0);
@@ -241,6 +269,7 @@ export default function App() {
     
     if (opt.isCorrect) {
       playSound('correct');
+      playHaptic([50, 50, 50]);
       setInteractionState('correct');
       setMascotState('happy');
       
@@ -261,6 +290,7 @@ export default function App() {
       setScore(s => s + Math.floor((100 + timeBonus * 10) * multiplier));
     } else {
       playSound('trap');
+      playHaptic([100, 50, 100]);
       setInteractionState('wrong');
       setMascotState('shocked');
       setStreak(0);
@@ -274,6 +304,30 @@ export default function App() {
     setPlayState('FEEDBACK');
   };
 
+
+  const pauseGame = () => {
+    playSound('tap');
+    playHaptic();
+    if (timerRef.current) clearInterval(timerRef.current);
+    setPlayState('PAUSED');
+  };
+
+  const resumeGame = () => {
+    playSound('tap');
+    playHaptic();
+    setPlayState('PLAYING');
+    timerRef.current = setInterval(() => {
+      setTimeLeft((prev) => {
+        if (prev <= 0) {
+          clearInterval(timerRef.current);
+          handleTimeout();
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 10);
+  };
+
   const triggerFlash = (type) => {
     setFlashScreen(type);
     setTimeout(() => setFlashScreen(null), 800);
@@ -281,6 +335,7 @@ export default function App() {
 
   const handleFeedbackContinue = () => {
     playSound('tap');
+    playHaptic();
     if (gameMode === 'MARATHON' && lives <= 0) {
       endGame();
     } else {
@@ -517,16 +572,16 @@ export default function App() {
           <div className="slide-fade flex-col gap-4">
             <h1 style={{ fontSize: '2rem', marginTop: '10px' }}>Settings</h1>
             <div className="glass-panel" style={{ padding: '20px' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }} onClick={toggleSound}>
                 <h3>Sound Effects</h3>
-                <div style={{ width: '50px', height: '26px', background: 'var(--secondary)', borderRadius: '15px', position: 'relative' }}>
-                  <div style={{ width: '22px', height: '22px', background: '#111318', borderRadius: '50%', position: 'absolute', right: '2px', top: '2px' }}></div>
+                <div style={{ width: '50px', height: '26px', background: soundEnabled ? 'var(--secondary)' : 'rgba(255,255,255,0.2)', borderRadius: '15px', position: 'relative', cursor: 'pointer', transition: 'background 0.3s' }}>
+                  <div style={{ width: '22px', height: '22px', background: '#111318', borderRadius: '50%', position: 'absolute', left: soundEnabled ? '26px' : '2px', top: '2px', transition: 'left 0.3s' }}></div>
                 </div>
               </div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }} onClick={toggleHaptics}>
                 <h3>Haptic Feedback</h3>
-                <div style={{ width: '50px', height: '26px', background: 'var(--secondary)', borderRadius: '15px', position: 'relative' }}>
-                  <div style={{ width: '22px', height: '22px', background: '#111318', borderRadius: '50%', position: 'absolute', right: '2px', top: '2px' }}></div>
+                <div style={{ width: '50px', height: '26px', background: hapticsEnabled ? 'var(--secondary)' : 'rgba(255,255,255,0.2)', borderRadius: '15px', position: 'relative', cursor: 'pointer', transition: 'background 0.3s' }}>
+                  <div style={{ width: '22px', height: '22px', background: '#111318', borderRadius: '50%', position: 'absolute', left: hapticsEnabled ? '26px' : '2px', top: '2px', transition: 'left 0.3s' }}></div>
                 </div>
               </div>
               
@@ -552,6 +607,7 @@ export default function App() {
           <div className="slide-fade flex-col h-full" style={{ height: '100%' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 0 1rem 0' }}>
               <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+                <button onClick={pauseGame} style={{ background: 'transparent', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', fontSize: '1.2rem' }}>⏸️</button>
                 <span style={{ color: 'var(--text-muted)', textTransform: 'uppercase', fontSize: '0.9rem', letterSpacing: '1px' }}>{currentPuzzle.category}</span>
                 <span style={{ color: 'var(--primary)', fontSize: '0.9rem', fontWeight: 900 }}>T{currentPuzzle.difficulty}</span>
               </div>
@@ -628,6 +684,23 @@ export default function App() {
             <button className="btn-primary" style={{ width: '100%' }} onClick={handleFeedbackContinue}>
               {gameMode === 'MARATHON' && lives <= 0 ? 'VIEW RESULTS' : 'NEXT QUESTION'}
             </button>
+          </div>
+        )}
+
+        
+        {/* PAUSED SCREEN */}
+        {nav === 'HOME' && playState === 'PAUSED' && (
+          <div className="slide-fade flex-col h-full" style={{ height: '100%', justifyContent: 'center' }}>
+            <h1 style={{ fontSize: '3rem', textAlign: 'center', marginBottom: '2rem' }}>PAUSED</h1>
+            
+            <div className="glass-panel" style={{ padding: '2rem', display: 'flex', flexDirection: 'column', gap: '15px' }}>
+              <button className="btn-primary" style={{ padding: '1.2rem', fontSize: '1.2rem', fontWeight: '900' }} onClick={resumeGame}>
+                RESUME
+              </button>
+              <button className="btn-answer" style={{ padding: '1.2rem', fontWeight: 'bold' }} onClick={() => setPlayState('IDLE')}>
+                EXIT TO HUB
+              </button>
+            </div>
           </div>
         )}
 

@@ -358,64 +358,112 @@ export default function App() {
 
         
         {nav === 'HOME' && playState === 'IDLE' && setupMode && (
-          <div className="slide-fade flex-col gap-4">
-            <h1 style={{ fontSize: '2rem', marginTop: '10px' }}>Setup Mode</h1>
-            <div className="glass-panel" style={{ padding: '20px' }}>
-              <h3 style={{ marginBottom: '10px' }}>Select Topics</h3>
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', marginBottom: '20px' }}>
-                {allTopics.map(topic => (
-                  <button 
-                    key={topic}
-                    onClick={() => toggleTopic(topic)}
-                    style={{
-                      padding: '8px 15px', 
-                      borderRadius: '15px', 
-                      border: 'none',
-                      background: selectedTopics.includes(topic) ? 'var(--primary)' : 'rgba(255,255,255,0.1)',
-                      color: selectedTopics.includes(topic) ? '#000' : '#fff',
-                      cursor: 'pointer',
-                      textTransform: 'capitalize'
-                    }}
-                  >
-                    {topic}
-                  </button>
-                ))}
+          <div className="slide-fade flex-col h-full" style={{ padding: '10px 0', display: 'flex', flexDirection: 'column', height: '100%', overflow: 'hidden' }}>
+            <h1 style={{ fontSize: '2rem', marginBottom: '20px', textAlign: 'center' }}>SETUP MODE</h1>
+            
+            <div style={{ flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '20px', paddingBottom: '10px' }}>
+              <div className="glass-panel" style={{ padding: '20px' }}>
+                <h3 style={{ marginBottom: '15px', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '1px', fontSize: '0.9rem' }}>SELECT TOPICS</h3>
+                <div style={{ 
+                  display: 'grid', 
+                  gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', 
+                  gap: '12px' 
+                }}>
+                  {[
+                    { id: 'logic', label: 'Logic', icon: '🎯' },
+                    { id: 'math', label: 'Math', icon: '🔢' },
+                    { id: 'pattern', label: 'Pattern', icon: '🧩' },
+                    { id: 'perception', label: 'Perception', icon: '👁️' },
+                    { id: 'riddle', label: 'Riddle', icon: '🧠' },
+                    { id: 'science', label: 'Science', icon: '🔬' },
+                    { id: 'wordplay', label: 'Wordplay', icon: '🔤' }
+                  ].map(topic => (
+                    <button 
+                      key={topic.id}
+                      onClick={() => toggleTopic(topic.id)}
+                      style={{
+                        padding: '12px 15px', 
+                        borderRadius: '12px', 
+                        border: selectedTopics.includes(topic.id) ? '2px solid var(--primary)' : '2px solid transparent',
+                        background: selectedTopics.includes(topic.id) ? 'rgba(255, 215, 0, 0.1)' : 'rgba(255,255,255,0.05)',
+                        color: '#fff',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '8px',
+                        transition: 'all 0.2s',
+                        boxShadow: selectedTopics.includes(topic.id) ? '0 0 10px rgba(255,215,0,0.2)' : 'none'
+                      }}
+                    >
+                      <span style={{ fontSize: '1.2rem' }}>{topic.icon}</span>
+                      <span style={{ fontWeight: selectedTopics.includes(topic.id) ? 'bold' : 'normal' }}>{topic.label}</span>
+                    </button>
+                  ))}
+                </div>
               </div>
-              <h3 style={{ marginBottom: '10px' }}>Select Levels</h3>
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', marginBottom: '20px' }}>
-                {[1, 2, 3, 4, 5].map(level => (
-                  <button 
-                    key={level}
-                    onClick={() => toggleLevel(level)}
-                    style={{
-                      padding: '8px 15px', 
-                      borderRadius: '15px', 
-                      border: 'none',
-                      background: selectedLevels.includes(level) ? 'var(--secondary)' : 'rgba(255,255,255,0.1)',
-                      color: selectedLevels.includes(level) ? '#000' : '#fff',
-                      cursor: 'pointer'
-                    }}
-                  >
-                    Level {level}
-                  </button>
-                ))}
+
+              <div className="glass-panel" style={{ padding: '20px' }}>
+                <h3 style={{ marginBottom: '15px', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '1px', fontSize: '0.9rem' }}>SELECT LEVELS</h3>
+                <div style={{ 
+                  display: 'flex', 
+                  flexWrap: 'wrap', 
+                  gap: '12px',
+                  justifyContent: 'center'
+                }}>
+                  {[
+                    { id: 1, icon: '①' },
+                    { id: 2, icon: '②' },
+                    { id: 3, icon: '③' },
+                    { id: 4, icon: '④' },
+                    { id: 5, icon: '⑤' }
+                  ].map(level => (
+                    <button 
+                      key={level.id}
+                      onClick={() => toggleLevel(level.id)}
+                      style={{
+                        flex: '1 1 auto',
+                        minWidth: '80px',
+                        padding: '12px', 
+                        borderRadius: '12px', 
+                        border: selectedLevels.includes(level.id) ? '2px solid var(--secondary)' : '2px solid transparent',
+                        background: selectedLevels.includes(level.id) ? 'rgba(0, 255, 204, 0.1)' : 'rgba(255,255,255,0.05)',
+                        color: '#fff',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        gap: '6px',
+                        transition: 'all 0.2s',
+                        boxShadow: selectedLevels.includes(level.id) ? '0 0 10px rgba(0,255,204,0.2)' : 'none'
+                      }}
+                    >
+                      <span style={{ fontSize: '1.1rem' }}>{level.icon}</span>
+                      <span style={{ fontWeight: selectedLevels.includes(level.id) ? 'bold' : 'normal' }}>Level {level.id}</span>
+                    </button>
+                  ))}
+                </div>
               </div>
-              <div style={{display: 'flex', gap: '10px'}}>
-                <button className="btn-answer" style={{ flex: 1, padding: '1rem' }} onClick={() => setSetupMode(false)}>
-                  Cancel
-                </button>
-                <button 
-                   className="btn-primary" 
-                   style={{ flex: 1, padding: '1rem' }} 
-                   onClick={() => {
-                     setSetupMode(false);
-                     startGame(pendingGameMode);
-                   }}
-                   disabled={selectedTopics.length === 0 || selectedLevels.length === 0}
-                >
-                  Start!
-                </button>
-              </div>
+            </div>
+
+            <div style={{ display: 'flex', gap: '15px', marginTop: '10px', paddingTop: '15px', borderTop: '1px solid rgba(255,255,255,0.1)' }}>
+              <button 
+                className="btn-answer" 
+                style={{ flex: 1, padding: '1.2rem', fontWeight: 'bold' }} 
+                onClick={() => setSetupMode(false)}
+              >
+                CANCEL
+              </button>
+              <button 
+                className="btn-primary" 
+                style={{ flex: 2, padding: '1.2rem', fontSize: '1.2rem', fontWeight: '900', letterSpacing: '1px' }} 
+                onClick={() => {
+                  setSetupMode(false);
+                  startGame(pendingGameMode);
+                }}
+                disabled={selectedTopics.length === 0 || selectedLevels.length === 0}
+              >
+                START GAME
+              </button>
             </div>
           </div>
         )}

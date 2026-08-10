@@ -431,13 +431,13 @@ export default function App() {
                   gap: '12px' 
                 }}>
                   {[
-                    { id: 'logic', label: 'Logic', icon: '🧠' },
-                    { id: 'math', label: 'Math', icon: '🔢' },
-                    { id: 'pattern', label: 'Pattern', icon: '🧩' },
-                    { id: 'perception', label: 'Perception', icon: '👁️' },
-                    { id: 'riddle', label: 'Riddle', icon: '📜' },
-                    { id: 'science', label: 'Science', icon: '🧪' },
-                    { id: 'wordplay', label: 'Wordplay', icon: '🔤' }
+                    { id: 'Logic', label: 'Logic', icon: '🧠' },
+                    { id: 'Math', label: 'Math', icon: '🔢' },
+                    { id: 'Pattern', label: 'Pattern', icon: '🧩' },
+                    { id: 'Perception', label: 'Perception', icon: '👁️' },
+                    { id: 'Riddle', label: 'Riddle', icon: '📜' },
+                    { id: 'Science', label: 'Science', icon: '🧪' },
+                    { id: 'Wordplay', label: 'Wordplay', icon: '🔤' }
                   ].map(topic => (
                     <button 
                       key={topic.id}

@@ -364,7 +364,7 @@ export default function App() {
       {flashScreen === 'orange' && <div className="screen-flash-orange"></div>}
       {flashScreen === 'streak' && <div className="streak-glow"></div>}
 
-      <div style={{ flex: 1, padding: '1.5rem', display: 'flex', flexDirection: 'column', height: '100%', overflow: 'hidden' }}>
+      <div style={{ flex: 1, padding: 'clamp(1rem, 3vw, 1.5rem)', display: 'flex', flexDirection: 'column', height: '100%', overflowY: 'auto', overflowX: 'hidden' }}>
         
         {/* HOME SCREEN */}
         {nav === 'HOME' && playState === 'IDLE' && !setupMode && (
@@ -416,7 +416,7 @@ export default function App() {
 
         
         {nav === 'HOME' && playState === 'IDLE' && setupMode && (
-          <div className="slide-fade flex-col h-full" style={{ padding: '10px 0', display: 'flex', flexDirection: 'column', height: '100%', overflow: 'hidden' }}>
+          <div className="slide-fade flex-col h-full" style={{ padding: '10px 0', display: 'flex', flexDirection: 'column', minHeight: '100%' }}>
             <h1 style={{ fontSize: '2rem', marginBottom: '20px', textAlign: 'center' }}>SETUP MODE</h1>
             
             <div style={{ flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '20px', paddingBottom: '10px' }}>
@@ -604,7 +604,7 @@ export default function App() {
 
         {/* GAMEPLAY SCREEN */}
         {nav === 'HOME' && playState === 'PLAYING' && currentPuzzle && (
-          <div className="slide-fade flex-col h-full" style={{ height: '100%' }}>
+          <div className="slide-fade flex-col h-full" style={{ minHeight: '100%' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 0 1rem 0' }}>
               <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
                 <button onClick={pauseGame} style={{ background: 'transparent', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', fontSize: '1.2rem' }}>⏸️</button>
@@ -657,7 +657,7 @@ export default function App() {
 
         {/* FEEDBACK SCREEN */}
         {nav === 'HOME' && playState === 'FEEDBACK' && currentPuzzle && (
-          <div className="slide-fade flex-col h-full" style={{ height: '100%', alignItems: 'center' }}>
+          <div className="slide-fade flex-col h-full" style={{ minHeight: '100%', alignItems: 'center' }}>
             <h1 style={{ marginTop: '10px', color: interactionState === 'correct' ? 'var(--secondary)' : 'var(--primary)' }}>
               {interactionState === 'correct' ? 'EVADED!' : interactionState === 'timeout' ? 'OUT OF TIME' : 'BAITED!'}
             </h1>
@@ -690,7 +690,7 @@ export default function App() {
         
         {/* PAUSED SCREEN */}
         {nav === 'HOME' && playState === 'PAUSED' && (
-          <div className="slide-fade flex-col h-full" style={{ height: '100%', justifyContent: 'center' }}>
+          <div className="slide-fade flex-col h-full" style={{ minHeight: '100%', justifyContent: 'center' }}>
             <h1 style={{ fontSize: '3rem', textAlign: 'center', marginBottom: '2rem' }}>PAUSED</h1>
             
             <div className="glass-panel" style={{ padding: '2rem', display: 'flex', flexDirection: 'column', gap: '15px' }}>

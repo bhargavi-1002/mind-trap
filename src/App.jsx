@@ -92,7 +92,7 @@ export default function App() {
   const [flashScreen, setFlashScreen] = useState(null);
   const allTopics = [...new Set(PUZZLES.map(p => p.category))];
   const [selectedTopics, setSelectedTopics] = useState(allTopics);
-  const [selectedLevels, setSelectedLevels] = useState([1, 2, 3]);
+  const [selectedLevels, setSelectedLevels] = useState([1, 2, 3, 4, 5]);
   const [setupMode, setSetupMode] = useState(false);
   const [pendingGameMode, setPendingGameMode] = useState(null);
  
@@ -383,7 +383,7 @@ export default function App() {
               </div>
               <h3 style={{ marginBottom: '10px' }}>Select Levels</h3>
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', marginBottom: '20px' }}>
-                {[1, 2, 3].map(level => (
+                {[1, 2, 3, 4, 5].map(level => (
                   <button 
                     key={level}
                     onClick={() => toggleLevel(level)}

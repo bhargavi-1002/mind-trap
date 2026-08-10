@@ -89,7 +89,13 @@ export default function App() {
   const [interactionState, setInteractionState] = useState(null);
   const [selectedOption, setSelectedOption] = useState(null);
   
-  const [flashScreen, setFlashScreen] = useState(null); 
+  const [flashScreen, setFlashScreen] = useState(null);
+  const allTopics = [...new Set(PUZZLES.map(p => p.category))];
+  const [selectedTopics, setSelectedTopics] = useState(allTopics);
+  const [selectedLevels, setSelectedLevels] = useState([1, 2, 3]);
+  const [setupMode, setSetupMode] = useState(false);
+  const [pendingGameMode, setPendingGameMode] = useState(null);
+ 
 
   useEffect(() => {
     localStorage.setItem('mt_played', JSON.stringify(playedPuzzles));
@@ -143,6 +149,21 @@ export default function App() {
     setLives(mode === 'MARATHON' ? 3 : 1);
     nextPuzzle();
   };
+  
+  const initiateGame = (mode) => {
+    playSound('tap');
+    setPendingGameMode(mode);
+    setSetupMode(true);
+  };
+  
+  const toggleTopic = (topic) => {
+    setSelectedTopics(prev => prev.includes(topic) ? prev.filter(t => t !== topic) : [...prev, topic]);
+  };
+  
+  const toggleLevel = (level) => {
+    setSelectedLevels(prev => prev.includes(level) ? prev.filter(l => l !== level) : [...prev, level]);
+  };
+
 
   const nextPuzzle = () => {
     if (gameMode === 'QUICK' && questionsAnswered >= 10) {
@@ -156,12 +177,16 @@ export default function App() {
     setPlayState('PLAYING');
     setFlashScreen(null);
     
-    let available = PUZZLES.filter(p => !playedPuzzles.includes(p.id));
+    let filteredPuzzles = PUZZLES.filter(p => selectedTopics.includes(p.category) && selectedLevels.includes(p.difficulty));
+    if (filteredPuzzles.length === 0) {
+       filteredPuzzles = PUZZLES; // fallback if empty
+    }
+    let available = filteredPuzzles.filter(p => !playedPuzzles.includes(p.id));
     
     // If all puzzles played, reset the list!
     if (available.length === 0) {
       setPlayedPuzzles([]);
-      available = [...PUZZLES];
+      available = [...filteredPuzzles];
     }
     
     const puzzle = available[Math.floor(Math.random() * available.length)];
@@ -284,7 +309,7 @@ export default function App() {
       <div style={{ flex: 1, padding: '1.5rem', display: 'flex', flexDirection: 'column', height: '100%', overflow: 'hidden' }}>
         
         {/* HOME SCREEN */}
-        {nav === 'HOME' && playState === 'IDLE' && (
+        {nav === 'HOME' && playState === 'IDLE' && !setupMode && (
           <div className="slide-fade flex-col gap-4">
             <div className="hero-card" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '10px' }}>
               <div style={{ position: 'relative', zIndex: 2 }}>
@@ -311,7 +336,7 @@ export default function App() {
 
             <h3 style={{ marginTop: '10px', textTransform: 'uppercase', letterSpacing: '1px' }}>Select Mode</h3>
             
-            <div className="glass-panel mode-card" onClick={() => startGame('QUICK')}>
+            <div className="glass-panel mode-card" onClick={() => initiateGame('QUICK')}>
               <div className="mode-icon">⚡</div>
               <div style={{ flex: 1 }}>
                 <h3>Quick Play</h3>
@@ -320,13 +345,77 @@ export default function App() {
               <div style={{ fontSize: '1.5rem', color: 'var(--secondary)' }}>→</div>
             </div>
             
-            <div className="glass-panel mode-card" onClick={() => startGame('MARATHON')}>
+            <div className="glass-panel mode-card" onClick={() => initiateGame('MARATHON')}>
               <div className="mode-icon">♾️</div>
               <div style={{ flex: 1 }}>
                 <h3>Marathon</h3>
                 <p style={{ fontSize: '0.9rem' }}>Endless. 3 lives. High stakes.</p>
               </div>
               <div style={{ fontSize: '1.5rem', color: 'var(--primary)' }}>→</div>
+            </div>
+          </div>
+        )}
+
+        
+        {nav === 'HOME' && playState === 'IDLE' && setupMode && (
+          <div className="slide-fade flex-col gap-4">
+            <h1 style={{ fontSize: '2rem', marginTop: '10px' }}>Setup Mode</h1>
+            <div className="glass-panel" style={{ padding: '20px' }}>
+              <h3 style={{ marginBottom: '10px' }}>Select Topics</h3>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', marginBottom: '20px' }}>
+                {allTopics.map(topic => (
+                  <button 
+                    key={topic}
+                    onClick={() => toggleTopic(topic)}
+                    style={{
+                      padding: '8px 15px', 
+                      borderRadius: '15px', 
+                      border: 'none',
+                      background: selectedTopics.includes(topic) ? 'var(--primary)' : 'rgba(255,255,255,0.1)',
+                      color: selectedTopics.includes(topic) ? '#000' : '#fff',
+                      cursor: 'pointer',
+                      textTransform: 'capitalize'
+                    }}
+                  >
+                    {topic}
+                  </button>
+                ))}
+              </div>
+              <h3 style={{ marginBottom: '10px' }}>Select Levels</h3>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', marginBottom: '20px' }}>
+                {[1, 2, 3].map(level => (
+                  <button 
+                    key={level}
+                    onClick={() => toggleLevel(level)}
+                    style={{
+                      padding: '8px 15px', 
+                      borderRadius: '15px', 
+                      border: 'none',
+                      background: selectedLevels.includes(level) ? 'var(--secondary)' : 'rgba(255,255,255,0.1)',
+                      color: selectedLevels.includes(level) ? '#000' : '#fff',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    Level {level}
+                  </button>
+                ))}
+              </div>
+              <div style={{display: 'flex', gap: '10px'}}>
+                <button className="btn-answer" style={{ flex: 1, padding: '1rem' }} onClick={() => setSetupMode(false)}>
+                  Cancel
+                </button>
+                <button 
+                   className="btn-primary" 
+                   style={{ flex: 1, padding: '1rem' }} 
+                   onClick={() => {
+                     setSetupMode(false);
+                     startGame(pendingGameMode);
+                   }}
+                   disabled={selectedTopics.length === 0 || selectedLevels.length === 0}
+                >
+                  Start!
+                </button>
+              </div>
             </div>
           </div>
         )}

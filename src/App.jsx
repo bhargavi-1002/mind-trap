@@ -537,7 +537,7 @@ export default function App() {
             <div style={{ display: 'flex', gap: '15px', marginTop: '10px', paddingTop: '15px', borderTop: '1px solid rgba(255,255,255,0.1)' }}>
               <button 
                 style={{ 
-                  flex: 1, padding: '1.2rem', fontWeight: 'bold', 
+                  flex: 1, padding: '1rem', fontWeight: 'bold', 
                   background: 'transparent', border: 'none', color: 'rgba(255,255,255,0.6)', 
                   cursor: 'pointer', transition: 'color 0.2s' 
                 }} 
@@ -550,7 +550,7 @@ export default function App() {
               <button 
                 className="btn-primary" 
                 style={{ 
-                  flex: 2, padding: '1.2rem', fontSize: '1.2rem', fontWeight: '900', letterSpacing: '1px',
+                  flex: 2, padding: '1rem', fontSize: '1.1rem', fontWeight: '900', letterSpacing: '1px',
                   opacity: (selectedTopics.length === 0 || selectedLevels.length === 0) ? 0.3 : 1,
                   boxShadow: (selectedTopics.length === 0 || selectedLevels.length === 0) ? 'none' : '0 0 20px rgba(255,215,0,0.4)',
                   transition: 'all 0.2s'
@@ -735,7 +735,7 @@ export default function App() {
         )}
 
       </div>
-      {renderNav()}
+      {(playState === 'IDLE' && !setupMode) && renderNav()}
     </>
   );
 }
